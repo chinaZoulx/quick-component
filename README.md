@@ -1,5 +1,5 @@
 ## quick-component
-Android 快速开发组件，对常用的组件进行了二次封装，更加便捷个性化使用。纯代码编写未引用其他组件，避免了组件冲突，使得代码量很小<br>
+Android 快速开发组件，使用便捷个性化。纯代码编写，除了Adapter一千多行，其他类均只有几百行代码，非常小巧。而且还包含一些常用工具<br>
 ## gradle引用示例
 ~~~java
 implementation 'org.quick.android:quick-component:0.0.3'
