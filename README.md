@@ -1,5 +1,9 @@
-# quick-component
+## quick-component
 Android 快速开发组件，对常用的组件进行了二次封装，更加便捷个性化使用。纯代码编写未引用其他组件，避免了组件冲突，使得代码量很小<br>
+## gradle引用示例
+~~~java
+implementation 'org.quick.android:quick-component:0.0.3'
+~~~
 ## 组件使用前需初始化：
 一次初始化即可
 ~~~java
@@ -135,7 +139,7 @@ QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
 ## QuickBroadcast
 快速方便的使用动态广播，告别繁琐的注册与注销广播。<br>
 正常写法<br>
-先写一个广播
+##先写一个广播
 ~~~java
 val broadcastRecevier=object :BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -143,21 +147,21 @@ val broadcastRecevier=object :BroadcastReceiver(){
         }
     }
 ~~~
-再根据action注册一个
+##再根据action注册一个
 ~~~java 
 registerReceiver(broadcastRecevier, IntentFilter("action"))
 ~~~
-再onDestroy中注销
+##再onDestroy中注销
 ~~~java
 unregisterReceiver(broadcastRecevier)
 ~~~
-再发送广播
+##再发送广播
 ~~~java
 sendBroadcast(Intent("test"))
 ~~~
 每个页面都需这样去写，你到底累不累？<br><br>
 现在来看看新的写法，只需两步即可实现<br>
-1、注册
+## 1、注册
 ~~~java
 QuickBroadcast.addBroadcastListener(绑定者, { action, intent ->
             when (action) {
@@ -166,7 +170,7 @@ QuickBroadcast.addBroadcastListener(绑定者, { action, intent ->
             }
         }, "test", "test2")/*天呐，这里居然可以指定多个接受者*/
 ~~~
-2、发送广播
+## 2、发送广播
 ~~~java
 QuickBroadcast.sendBroadcast(Intent(), "test")
 ~~~
@@ -177,7 +181,7 @@ QuickBroadcast.sendBroadcast(Intent(), "test")
 sendBroadcast(Intent("test"))
 sendBroadcast(Intent("MyCenterFragment"))
 ~~~
-新写法
+##新写法
 ~~~java
 QuickBroadcast.sendBroadcast(Intent(), "test","MyCenterFragment")
 ~~~
@@ -326,11 +330,12 @@ val tempDialog = QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialo
 ~~~
 ## QuickNotify
 快速方式使用通知，组件提供常用的临时通知，进度条两种通知。同时也可以根据业务自定义通知
-### 临时普通通知-不需要点击事件
+### 临时普通通知
+不需要点击事件
 ~~~java
 QuickNotify.notifyTempNormal(R.mipmap.ic_launcher,"这是标题","这是内容")
 ~~~
-临时普通通知-需要点击事件
+需要点击事件
 ~~~java
 QuickNotify.notifyTempNormal(R.mipmap.ic_launcher,"这是标题","这是内容",intent) { context, intent ->
             QuickToast.showToastDefault("点击了通知")
