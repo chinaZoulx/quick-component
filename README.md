@@ -92,7 +92,7 @@ class BaseViewHolder(itemView: View) : QuickViewHolder(itemView) {
 }
 ~~~
 ## QuickASync
-快速常用的异常操作，包含了倒计时等操作<br>
+快速常用的异步操作，包含了倒计时等操作<br>
 ### 异步示例
 ~~~java
 QuickASync.async(object : QuickASync.OnASyncListener<String> {
@@ -139,7 +139,7 @@ QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
 ## QuickBroadcast
 快速方便的使用动态广播，告别繁琐的注册与注销广播。<br>
 正常写法<br>
-##先写一个广播
+#### 先写一个广播
 ~~~java
 val broadcastRecevier=object :BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -147,15 +147,15 @@ val broadcastRecevier=object :BroadcastReceiver(){
         }
     }
 ~~~
-##再根据action注册一个
+#### 再根据action注册一个
 ~~~java 
 registerReceiver(broadcastRecevier, IntentFilter("action"))
 ~~~
-##再onDestroy中注销
+#### 再onDestroy中注销
 ~~~java
 unregisterReceiver(broadcastRecevier)
 ~~~
-##再发送广播
+#### 再发送广播
 ~~~java
 sendBroadcast(Intent("test"))
 ~~~
@@ -181,7 +181,7 @@ QuickBroadcast.sendBroadcast(Intent(), "test")
 sendBroadcast(Intent("test"))
 sendBroadcast(Intent("MyCenterFragment"))
 ~~~
-##新写法
+#### 新写法
 ~~~java
 QuickBroadcast.sendBroadcast(Intent(), "test","MyCenterFragment")
 ~~~
