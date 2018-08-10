@@ -85,8 +85,8 @@ open class QuickDialog private constructor() {
         internal var gravity = Gravity.CENTER
         internal var canceledOnTouchOutside = false
         internal var isRewrite = false/*是否每次都重新创建dialog*/
-        internal var paddingLeft = 0
-        internal var paddingRight = 0
+        internal var paddingLeft = 100
+        internal var paddingRight = 100
         internal var paddingTop = 0
         internal var paddingBottom = 0
         internal lateinit var layoutView: View

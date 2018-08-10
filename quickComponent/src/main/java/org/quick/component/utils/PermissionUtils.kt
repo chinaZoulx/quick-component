@@ -1,4 +1,4 @@
-package org.chris.quick.tools.common
+package org.quick.component.utils
 
 import android.Manifest
 import android.os.Bundle

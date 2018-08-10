@@ -2,9 +2,13 @@ package org.quick.component.utils
 
 import android.content.res.Resources
 import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
+import android.os.Build
+
 
 object ImageUtils {
-
 
     /**
      * 获取指定大小的位图
@@ -19,7 +23,14 @@ object ImageUtils {
      */
     fun decodeSampledBitmapFromResource(res: Resources, resId: Int, reqWidth: Int, reqHeight: Int): Bitmap {
 
-        if (reqWidth == 0 || reqHeight == 0) return BitmapFactory.decodeResource(res, resId)
+        if (reqWidth == 0 || reqHeight == 0) {
+            return BitmapFactory.decodeResource(res, resId)
+                    ?: drawableToBitmap(
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                res.getDrawable(resId, null)
+                            else res.getDrawable(resId)
+                    )
+        }
 
         // First decode with inJustDecodeBounds=true to check dimensions
         val options = BitmapFactory.Options()
@@ -81,6 +92,23 @@ object ImageUtils {
             inSampleSize = if (width > height) Math.round(height.toFloat() / reqHeight.toFloat()) else Math.round(width.toFloat() / reqWidth.toFloat())
         }
         return inSampleSize
+    }
+
+    fun drawableToBitmap(drawable: Drawable): Bitmap {
+        // 取 drawable 的长宽
+        val w = drawable.intrinsicWidth
+        val h = drawable.intrinsicHeight
+
+        // 取 drawable 的颜色格式
+        val config = if (drawable.opacity != PixelFormat.OPAQUE) Bitmap.Config.ARGB_8888 else Bitmap.Config.RGB_565
+        // 建立对应 bitmap
+        val bitmap = Bitmap.createBitmap(w, h, config)
+        // 建立对应 bitmap 的画布
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, w, h)
+        // 把 drawable 内容画到画布中
+        drawable.draw(canvas)
+        return bitmap
     }
 
     /**

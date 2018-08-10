@@ -40,8 +40,8 @@ class RvListActivity : Activity() {
         }
     }
 
-    class Adapter : BaseAdapter<Int>() {
-        override fun onBindData(holder: BaseViewHolder, position: Int, itemData: Int) {
+    class Adapter : QuickAdapter<Int,QuickViewHolder>() {
+        override fun onBindData(holder: QuickViewHolder, position: Int, itemData: Int) {
             holder.setImgCircle(R.id.iv, itemData)
         }
 

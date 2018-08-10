@@ -1,4 +1,4 @@
-package org.chris.quick.tools
+package org.quick.component.utils
 
 import android.animation.Animator
 import android.animation.ObjectAnimator

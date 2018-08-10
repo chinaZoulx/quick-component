@@ -2,15 +2,12 @@ package org.quick.component.utils
 
 import android.app.Activity
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import org.quick.component.QuickAndroid
 
-
-import org.quick.utils.DevicesUtils
 
 import java.io.File
 
@@ -68,7 +65,7 @@ object SystemActionManager {
             } else {
                 Uri.fromFile(file)
             }
-            intent?.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri)
         }
         return intent
     }
@@ -88,6 +85,9 @@ object SystemActionManager {
         return intent
     }
 
+    /**
+     * 浏览器
+     */
     fun startActionBrowser(activity: Activity, url: String) {
         activity.startActivity(actionBrowser(url))
     }

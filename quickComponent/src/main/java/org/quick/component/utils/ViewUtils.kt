@@ -19,7 +19,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import org.quick.component.QuickAndroid
-import org.quick.utils.DevicesUtils
 import java.io.Serializable
 import java.util.ArrayList
 

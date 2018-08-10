@@ -164,8 +164,8 @@ open class QuickViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val img = getView<ImageView>(id)
         if (TextUtils.isEmpty(url)) {
             when {
-                isCir -> img.setImageBitmap(ImageUtils.cropCircle(ImageUtils.decodeSampledBitmapFromResource(itemView.resources, imgRes, img.measuredWidth, img.measuredHeight)))
-                radius > 0 -> ImageUtils.cropRoundRect(ImageUtils.decodeSampledBitmapFromResource(itemView.resources, imgRes, img.measuredWidth, img.measuredHeight), radius)
+                isCir -> img.setImageBitmap(ImageUtils.cropCircle(ImageUtils.decodeSampledBitmapFromResource(itemView.context.resources, imgRes, img.measuredWidth, img.measuredHeight)))
+                radius > 0 -> ImageUtils.cropRoundRect(ImageUtils.decodeSampledBitmapFromResource(itemView.context.resources, imgRes, img.measuredWidth, img.measuredHeight), radius)
                 else -> img.setImageResource(imgRes)
             }
         } else {

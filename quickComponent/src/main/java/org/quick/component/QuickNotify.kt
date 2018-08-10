@@ -3,15 +3,20 @@ package org.quick.component
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationCompat.VISIBILITY_PRIVATE
+import android.support.v4.content.pm.ShortcutInfoCompat
+import android.support.v4.content.pm.ShortcutManagerCompat
+import android.support.v4.graphics.drawable.IconCompat
 import android.util.SparseArray
-import org.chris.quick.tools.DateUtils
+import org.quick.component.utils.DateUtils
+
 
 /**
  * @describe 快速使用通知
@@ -21,6 +26,13 @@ import org.chris.quick.tools.DateUtils
  * @email chrisSpringSmell@gmail.com
  */
 object QuickNotify {
+    val actionShortcut = "com.android.launcher.action.INSTALL_SHORTCUT"
+    val shortcutName = javaClass.`package`.name + "-" + javaClass.simpleName + ":shortcutName"
+    val shortcutIcon = javaClass.`package`.name + "-" + javaClass.simpleName + ":shortcutIcon"
+    val shortcutPackageName = javaClass.`package`.name + "-" + javaClass.simpleName + ":shortcutPackageName"
+    val shortcutTargetName = javaClass.`package`.name + "-" + javaClass.simpleName + ":shortcutTargetName"
+
+    val data = javaClass.`package`.name + "-" + javaClass.simpleName + ":data"
     val action = javaClass.`package`.name + "-" + javaClass.simpleName + ":action"
     val actionCancel = javaClass.`package`.name + "-" + javaClass.simpleName + ":actionCancel"
     val actionClick = javaClass.`package`.name + "-" + javaClass.simpleName + ":actionClick"
@@ -30,8 +42,16 @@ object QuickNotify {
     val notificationManager: NotificationManager by lazy { return@lazy QuickAndroid.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager.createNotificationChannel(NotificationChannel(QuickAndroid.applicationContext.packageName, QuickAndroid.applicationContext.packageName, NotificationManager.IMPORTANCE_HIGH))
-        QuickAndroid.applicationContext.registerReceiver(NotificationReceiver(), IntentFilter(action))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(QuickAndroid.applicationContext.packageName, "通知消息", NotificationManager.IMPORTANCE_HIGH)
+            channel.enableLights(true)
+            channel.enableVibration(true)
+            channel.lightColor = Color.RED
+            notificationManager.createNotificationChannel(channel)
+        }
+        val intentFilter = IntentFilter(action)
+        intentFilter.addAction(actionShortcut)
+        QuickAndroid.applicationContext.registerReceiver(NotificationReceiver(), intentFilter)
     }
 
     /**
@@ -40,11 +60,12 @@ object QuickNotify {
      */
     fun notifyTempNormal(@DrawableRes icon: Int, title: String, content: String) {
         val notificationId = Math.abs(DateUtils.getCurrentTimeInMillis().toInt())
-        notify(notificationId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.appBaseName)
+        notify(notificationId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.applicationContext.packageName)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setOngoing(false)
+                .setVisibility(VISIBILITY_PRIVATE)
                 .setAutoCancel(true), null, null, null)
     }
 
@@ -55,11 +76,12 @@ object QuickNotify {
      */
     fun notifyTempNormal(@DrawableRes icon: Int, title: String, content: String, intentClick: Intent, onNotificationListener: ((context: Context, intent: Intent) -> Unit)) {
         val notificationId = Math.abs(DateUtils.getCurrentTimeInMillis().toInt())
-        notify(notificationId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.appBaseName)
+        notify(notificationId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.applicationContext.packageName)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setOngoing(false)
+                .setVisibility(VISIBILITY_PRIVATE)
                 .setAutoCancel(true), intentClick, null, onNotificationListener)
     }
 
@@ -68,11 +90,12 @@ object QuickNotify {
      * 临时通知-通知进度准备
      */
     fun notifyTempProgress(notifyId: Int, @DrawableRes icon: Int, title: String, content: String) {
-        notify(notifyId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.appBaseName)
+        notify(notifyId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.applicationContext.packageName)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setProgress(100, 0, true)
+                .setVisibility(VISIBILITY_PRIVATE)
                 .setOngoing(true)/*是否正在通知（是否不可以取消）*/
                 .setAutoCancel(false)/*是否点击时取消*/)
     }
@@ -81,10 +104,11 @@ object QuickNotify {
      * 临时通知-通知进度中
      */
     fun notifyTempProgresses(notifyId: Int, @DrawableRes icon: Int, title: String, content: String, progress: Int) {
-        notify(notifyId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.appBaseName)
+        notify(notifyId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.applicationContext.packageName)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(content)
+                .setVisibility(VISIBILITY_PRIVATE)
                 .setProgress(100, progress, false)
                 .setOngoing(true)/*是否正在通知（是否不可以取消）*/
                 .setAutoCancel(false)/*是否点击时取消*/)
@@ -94,10 +118,11 @@ object QuickNotify {
      * 临时通知-通知进度完成-点击取消
      */
     fun notifyTempProgressEnd(notifyId: Int, @DrawableRes icon: Int, title: String, content: String, intentClick: Intent?, onNotificationListener: ((context: Context, intent: Intent) -> Unit)?) {
-        notify(notifyId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.appBaseName)
+        notify(notifyId, NotificationCompat.Builder(QuickAndroid.applicationContext, QuickAndroid.applicationContext.packageName)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(content)
+                .setVisibility(VISIBILITY_PRIVATE)
                 .setProgress(100, 100, false)
                 .setOngoing(false)/*是否正在通知（是否不可以取消）*/
                 .setAutoCancel(true)/*是否点击时取消*/
@@ -159,13 +184,111 @@ object QuickNotify {
                 tempClick.putExtra(actionNotificationId, notificationId)
                 builder.setContentIntent(PendingIntent.getBroadcast(QuickAndroid.applicationContext, notificationId, tempClick, PendingIntent.FLAG_UPDATE_CURRENT))
             }
+
             notificationListeners.put(notificationId, onNotificationListener)
         }
         notificationManager.notify(notificationId, builder.build())
     }
 
-    fun cancelnotify(notificationId: Int) {
+    /**
+     * 创建桌面通知（快捷方式）
+     * @param builder 配置信息
+     * @param onNotificationListener 创建成功回调
+     */
+    fun notifyDesktopShortcut(builder: ShortcutBuilder, onNotificationListener: (context: Context, intent: Intent) -> Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) setupShortcutOAfter(builder, onNotificationListener) else setupShortcutOBefore(builder, onNotificationListener)
+    }
+
+    /**
+     * Android O 以后兼容
+     * @param builder
+     * @param onSuccessListener 创建成功回调
+     */
+    private fun setupShortcutOAfter(builder: ShortcutBuilder, onSuccessListener: (context: Context, intent: Intent) -> Unit) {
+        notificationListeners.put(builder.targetName.hashCode(), onSuccessListener)
+
+        val shortcutIntent = Intent(Intent.ACTION_VIEW)
+        shortcutIntent.component = ComponentName(builder.packageName, builder.packageName + "." + builder.targetName)
+        shortcutIntent.putExtras(builder.dataBundle)
+        val shortcutManagerCompat = ShortcutInfoCompat.Builder(QuickAndroid.applicationContext, builder.shortcutId)
+                .setIcon(IconCompat.createWithAdaptiveBitmap(builder.shortcutIcon))
+                .setShortLabel(builder.shortcutName)
+                .setIntent(shortcutIntent)
+                .setAlwaysBadged()
+                .build()
+
+        val intent = Intent(QuickAndroid.applicationContext, NotificationReceiver::class.java)
+        intent.putExtra(actionNotificationId, builder.targetName.hashCode())
+        intent.putExtra(shortcutName, builder.shortcutName)
+        intent.putExtra(shortcutIcon, builder.shortcutIcon)
+        intent.putExtra(shortcutPackageName, builder.packageName)
+        intent.putExtra(shortcutTargetName, builder.targetName)
+        intent.putExtras(builder.dataBundle)
+        val pendingIntentCancel = PendingIntent.getBroadcast(QuickAndroid.applicationContext, 0x0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(QuickAndroid.applicationContext))
+            if (ShortcutManagerCompat.requestPinShortcut(QuickAndroid.applicationContext, shortcutManagerCompat, pendingIntentCancel.intentSender))
+            else QuickToast.showToastDefault("添加失败")
+        else QuickToast.showToastDefault("设备不支持")
+    }
+
+    /**
+     * Android O 以前
+     * @param builder 配置内容
+     */
+    private fun setupShortcutOBefore(builder: ShortcutBuilder, onSuccessListener: (context: Context, intent: Intent) -> Unit) {
+        notificationListeners.put(builder.targetName.hashCode(), onSuccessListener)
+
+        val shortcutIntent = Intent(Intent.ACTION_MAIN).setComponent(ComponentName(builder.packageName, builder.packageName + "." + builder.targetName))
+        shortcutIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        shortcutIntent.putExtras(builder.dataBundle)
+        shortcutIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+
+        val shortcut = Intent(actionShortcut)
+        shortcut.putExtra("duplicate", false)
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, builder.shortcutName)
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON, builder.shortcutIcon)
+
+        shortcut.putExtra(actionNotificationId, builder.targetName.hashCode())
+        shortcut.putExtra(shortcutName, builder.shortcutName)
+        shortcut.putExtra(shortcutIcon, builder.shortcutIcon)
+        shortcut.putExtra(shortcutPackageName, builder.packageName)
+        shortcut.putExtra(shortcutTargetName, builder.targetName)
+        shortcut.putExtras(builder.dataBundle)
+        QuickAndroid.applicationContext.sendBroadcast(shortcut)
+    }
+
+    fun cancelNotify(notificationId: Int) {
         notificationManager.cancel(notificationId)
+    }
+
+    class ShortcutBuilder(var shortcutId: String = "") {
+        var packageName: String = ""
+        var targetName: String = ""
+        var shortcutName: String = ""
+        lateinit var dataBundle: Bundle
+        lateinit var shortcutIcon: Bitmap
+
+        fun setActivity(packageName: String, targetName: String): ShortcutBuilder {
+            setActivity(packageName, targetName, Bundle())
+            return this
+        }
+
+        /**
+         * @param targetName 目标ActivityNam
+         */
+        fun setActivity(packageName: String, targetName: String, dataBundle: Bundle): ShortcutBuilder {
+            this.packageName = packageName
+            this.targetName = targetName
+            this.dataBundle = dataBundle
+            return this
+        }
+
+        fun setShortcut(shortcutName: String, shortcutIcon: Bitmap): ShortcutBuilder {
+            this.shortcutName = shortcutName
+            this.shortcutIcon = shortcutIcon
+            return this
+        }
     }
 
     class NotificationReceiver : BroadcastReceiver() {

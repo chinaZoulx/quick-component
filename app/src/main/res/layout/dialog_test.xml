@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="40dp"
     android:background="#ffffff">
 
@@ -10,24 +10,28 @@
         android:id="@+id/titleTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:minHeight="100dp"
+        android:text="这是标题"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/leftTv"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:gravity="center"
+        android:text="这是左边按钮"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/rightTv"
-        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/titleTv" />
 
     <TextView
         android:id="@+id/rightTv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/leftTv"
         android:gravity="center"
+        android:text="这是右边按钮"
+        app:layout_constraintBottom_toBottomOf="@+id/leftTv"
         app:layout_constraintLeft_toRightOf="@+id/leftTv"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/leftTv" />

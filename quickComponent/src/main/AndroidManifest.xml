@@ -2,6 +2,8 @@
     package="org.quick.component">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
     <application>
         <receiver android:name=".QuickNotify$NotificationReceiver" />
     </application>

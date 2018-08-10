@@ -17,37 +17,37 @@ object QuickSPHelper {
     val mSharedPreferences: SharedPreferences by lazy { return@lazy QuickAndroid.applicationContext.getSharedPreferences(QuickAndroid.appBaseName, Context.MODE_PRIVATE) }
     val mEditor: SharedPreferences.Editor = mSharedPreferences.edit()
 
-    fun putValue(key: String, value: String): QuickSPHelper? {
+    fun putValue(key: String, value: String): QuickSPHelper {
         mEditor.putString(key, value).commit()
         return this
     }
 
-    fun putValue(key: String, value: Boolean): QuickSPHelper? {
+    fun putValue(key: String, value: Boolean): QuickSPHelper {
         mEditor.putBoolean(key, value).commit()
         return this
     }
 
-    fun putValue(key: String, value: Float): QuickSPHelper? {
+    fun putValue(key: String, value: Float): QuickSPHelper {
         mEditor.putFloat(key, value).commit()
         return this
     }
 
-    fun putValue(key: String, value: Double): QuickSPHelper? {
+    fun putValue(key: String, value: Double): QuickSPHelper {
         mEditor.putFloat(key, value.toFloat()).commit()
         return this
     }
 
-    fun putValue(key: String, value: Long): QuickSPHelper? {
+    fun putValue(key: String, value: Long): QuickSPHelper {
         mEditor.putLong(key, value).commit()
         return this
     }
 
-    fun putValue(key: String, value: Int): QuickSPHelper? {
+    fun putValue(key: String, value: Int): QuickSPHelper {
         mEditor.putInt(key, value).commit()
         return this
     }
 
-    fun putValue(key: String, value: Set<String>): QuickSPHelper? {
+    fun putValue(key: String, value: Set<String>): QuickSPHelper {
         mEditor.putStringSet(key, value).commit()
         return this
     }

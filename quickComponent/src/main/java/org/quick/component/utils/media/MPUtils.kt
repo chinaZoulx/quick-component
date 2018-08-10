@@ -1,13 +1,11 @@
 package org.quick.component.utils.media
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
 import android.os.Message
-import android.widget.Toast
-import org.chris.quick.tools.DateUtils
+import org.quick.component.utils.DateUtils
 import org.quick.component.QuickAndroid
 import org.quick.component.QuickToast
 import org.quick.component.utils.HttpUtils

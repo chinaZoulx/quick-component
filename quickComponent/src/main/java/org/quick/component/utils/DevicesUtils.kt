@@ -1,4 +1,4 @@
-package org.quick.utils
+package org.quick.component.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity

@@ -1,10 +1,9 @@
-package org.chris.quick.tools
-
-import android.util.Log
+package org.quick.component.utils
 
 import com.google.gson.Gson
 
 import org.json.JSONArray
+import org.quick.component.Log2
 
 import java.util.ArrayList
 
@@ -28,7 +27,7 @@ object GsonUtils {
         gson.fromJson(json, cls)
     } catch (ex: Exception) {
         ex.printStackTrace()
-        Log.e("Gson", "json or class error , from  " + cls.simpleName + " error json :" + json)
+        Log2.e("Gson", "json or class error , from  " + cls.simpleName + " error json :" + json)
         null
     }
 
@@ -46,7 +45,7 @@ object GsonUtils {
             (0 until ja.length()).mapTo(listT) { parseFromJson(ja.getString(it), cls)!! }
         } catch (ex: Exception) {
             ex.printStackTrace()
-            Log.e("Gson", "json or class error , from  " + cls.simpleName + " error json :" + json)
+            Log2.e("Gson", "json or class error , from  " + cls.simpleName + " error json :" + json)
         }
 
         return listT
@@ -62,7 +61,7 @@ object GsonUtils {
         gson.toJson(cls)
     } catch (ex: Exception) {
         ex.printStackTrace()
-        Log.e("Gson", "class error , from " + cls.simpleName)
+        Log2.e("Gson", "class error , from " + cls.simpleName)
         ""
     }
 
@@ -76,7 +75,7 @@ object GsonUtils {
         gson.toJson(clsList)
     } catch (ex: Exception) {
         ex.printStackTrace()
-        Log.e("Gson", "class list error , please check")
+        Log2.e("Gson", "class list error , please check")
         ""
     }
 }

@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/contentTv"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:gravity="center"
         android:text="Hello World!"
         app:layout_constraintBottom_toTopOf="@+id/shareTv"
@@ -21,11 +21,10 @@
         android:id="@+id/tempTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="50dp"
         android:text="测试通知"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/shareTv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -35,12 +34,36 @@
         android:id="@+id/shareTv"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:background="?attr/selectableItemBackground"
         android:gravity="center"
         android:text="测试异步"
-        app:layout_constraintBottom_toTopOf="@+id/imgIv1"
+        app:layout_constraintBottom_toTopOf="@+id/shortcutTv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tempTv" />
+    <TextView
+        android:id="@+id/shortcutTv"
+        android:layout_width="0dp"
+        android:background="?attr/selectableItemBackground"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="测试快捷方式"
+        app:layout_constraintBottom_toTopOf="@+id/shortcutChangeTv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shareTv" />
+
+    <TextView
+        android:id="@+id/shortcutChangeTv"
+        android:layout_width="0dp"
+        android:background="?attr/selectableItemBackground"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="测试更改原生快捷方式"
+        app:layout_constraintBottom_toTopOf="@+id/imgIv1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shortcutTv" />
 
     <ImageView
         android:id="@+id/imgIv1"
@@ -49,7 +72,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/imgIv2"
-        app:layout_constraintTop_toBottomOf="@+id/shareTv" />
+        app:layout_constraintTop_toBottomOf="@+id/shortcutChangeTv" />
 
     <ImageView
         android:id="@+id/imgIv2"
@@ -58,5 +81,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/imgIv1"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareTv" />
+        app:layout_constraintTop_toTopOf="@+id/imgIv1" />
 </android.support.constraint.ConstraintLayout>

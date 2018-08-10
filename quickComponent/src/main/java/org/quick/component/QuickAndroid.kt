@@ -17,12 +17,18 @@ object QuickAndroid {
      */
     var appBaseName = QuickConfigConstant.APP_BASE_NAME
     var defenseClickTime = 300L
-
     lateinit var applicationContext: Context
 
     fun init(applicationContext: Context) {
-        this.applicationContext = applicationContext
+        this.applicationContext = applicationContext.applicationContext
         appBaseName = applicationContext.packageName
+    }
+
+    /**
+     * 设置组件是否输出日志
+     */
+    fun setDebug(isDebug:Boolean){
+        Log2.isDebug=isDebug
     }
 
     fun resetInternal() {

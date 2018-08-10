@@ -1,6 +1,5 @@
-package org.chris.quick.tools
+package org.quick.component.utils
 
-import android.content.Context
 import android.os.Environment
 import org.quick.component.QuickAndroid
 import java.io.File

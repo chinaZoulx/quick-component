@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="org.quick.component.sample.MainActivity"
+            android:targetPackage="org.quick.component.sample" />
+    </shortcut>
+</shortcuts>

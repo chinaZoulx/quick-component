@@ -1,6 +1,5 @@
 package org.quick.component.utils.check
 
-import android.content.Context
 import org.quick.component.Log2
 import org.quick.component.QuickAndroid
 import java.io.ByteArrayOutputStream

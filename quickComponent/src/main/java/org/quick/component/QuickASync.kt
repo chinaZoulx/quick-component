@@ -5,7 +5,8 @@ import android.os.Looper
 import java.util.concurrent.Executors
 
 /**
- * @describe 方便的使用简单异步，此类只做简单异步封装，推荐使用RxAndroid
+ * @describe 方便的使用简单异步，此类只做简单异步封装。
+ *           更复杂的场景推荐使用RxAndroid：https://github.com/ReactiveX/RxAndroid
  * @author ChrisZou
  * @date 2018/08/03-10:16
  * @from https://github.com/SpringSmell/quick.library
@@ -29,22 +30,22 @@ object QuickASync {
     /**
      * 秒表计步，for example:60秒（1....60）
      * @param interval 间隔时间，单位：毫秒
-     * @param maxTime 最大时间，单位：毫秒
+     * @param maxSteps 最大步数
      */
-    fun <T> async(onIntervalListener: OnIntervalListener<T>, interval: Long, maxTime: Long, isReversal: Boolean = false) {
+    fun <T> async(onIntervalListener: OnIntervalListener<T>, interval: Long, maxSteps: Long, isReversal: Boolean = false) {
         executorService.submit {
-            var steps = if (isReversal) maxTime else 0
+            var steps = if (isReversal) maxSteps else 0
             if (isReversal)
                 while (steps > 0) {
-                    Thread.sleep(interval)
                     steps--
                     mainHandler.post { onIntervalListener.onNext(steps as T) }
+                    Thread.sleep(interval)
                 }
             else
-                while (steps < maxTime) {
-                    Thread.sleep(interval)
+                while (steps < maxSteps) {
                     steps++
                     mainHandler.post { onIntervalListener.onNext(steps as T) }
+                    Thread.sleep(interval)
                 }
             mainHandler.post { onIntervalListener.onAccept(steps as T) }
         }
