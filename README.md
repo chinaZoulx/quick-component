@@ -9,6 +9,7 @@ implementation 'org.quick.android:quick-component:0.0.3'
 ~~~java
 QuickAndroid.init(this)
 ~~~
+## 组件内容较多，示例请查看
 ## QuickAdapter
 快速创建RecyclerView的Adapter，高度灵活设置item参数,padding,margin都可以设置，集成了多种回调事件，OnItemClickListener,OnItemLongClickListener,OnCheckListener,OnClickLister。
 ### 简单使用示例
@@ -371,6 +372,15 @@ QuickNotify.notify(1, NotificationCompat.Builder(context, channelId)
         }
 ~~~
 
+### 桌面快捷方式
+兼容8.0，在桌面快速创建快捷式方式，自定义图片、名称以及bundle数据
+~~~java
+QuickNotify.notifyDesktopShortcut(QuickNotify.ShortcutBuilder(Math.random().toString())
+                    .setActivity(packageName, RvListActivity::class.java.simpleName, Bundle())
+                    .setShortcut("this is a name", ImageUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_launcher2))) { context, intent ->
+                QuickToast.showToastDefault("已成功创建" + intent.getStringExtra(QuickNotify.shortcutName))
+            }
+~~~
 
 
 
