@@ -20,7 +20,7 @@ import android.view.WindowManager
  */
 open class QuickDialog private constructor() {
 
-    private var builder: Builder? = null
+    lateinit var builder: Builder
     private var dialog: Dialog? = null
     private var viewHolder: QuickViewHolder? = null
 
@@ -30,23 +30,23 @@ open class QuickDialog private constructor() {
     }
 
     fun viewHolder(): QuickViewHolder {
-        if (viewHolder == null || viewHolder!!.itemView != builder?.layoutView)
-            viewHolder = QuickViewHolder(builder?.layoutView!!)
+        if (viewHolder == null || viewHolder!!.itemView != builder.layoutView)
+            viewHolder = QuickViewHolder(builder.layoutView)
         return viewHolder!!
     }
 
-    fun getDialog(): Dialog? {
-        if (builder != null && (dialog == null || viewHolder == null || viewHolder?.itemView != builder!!.layoutView || builder!!.isRewrite)) {
-            dialog = Dialog(builder?.context, builder!!.style)
-            dialog?.setContentView(viewHolder().itemView)
-            dialog?.window?.setGravity(builder!!.gravity)
+    fun getDialog(): Dialog {
+        if (dialog == null || viewHolder == null || viewHolder?.itemView != builder.layoutView || builder.isRewrite) {
+            dialog = Dialog(builder.context, builder.style)
+            dialog!!.setContentView(viewHolder().itemView)
+            dialog?.window?.setGravity(builder.gravity)
             dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog?.setCanceledOnTouchOutside(builder!!.canceledOnTouchOutside)
-            dialog?.window?.setLayout(builder!!.width, builder!!.height)
-            dialog?.window?.decorView?.setPadding(builder!!.paddingLeft, builder!!.paddingTop, builder!!.paddingRight, builder!!.paddingBottom)
-            dialog?.setCanceledOnTouchOutside(builder!!.canceledOnTouchOutside)
+            dialog?.setCanceledOnTouchOutside(builder.canceledOnTouchOutside)
+            dialog?.window?.setLayout(builder.width, builder.height)
+            dialog?.window?.decorView?.setPadding(builder.paddingLeft, builder.paddingTop, builder.paddingRight, builder.paddingBottom)
+            dialog?.setCanceledOnTouchOutside(builder.canceledOnTouchOutside)
         }
-        return dialog
+        return dialog!!
     }
 
     fun dimiss() {
@@ -54,17 +54,17 @@ open class QuickDialog private constructor() {
     }
 
     fun show(): QuickViewHolder {
-        getDialog()?.show()
+        getDialog().show()
         return viewHolder()
     }
 
     fun resetInternal() {
-        builder = null
         dialog = null
         viewHolder = null
     }
 
     companion object {
+
         fun dismiss() {
             ClassHolder.INSTANCE.dimiss()
         }
@@ -136,7 +136,7 @@ open class QuickDialog private constructor() {
 
         fun build() = ClassHolder.INSTANCE.setupQuickDialog(this)
 
-        fun create(): Dialog = ClassHolder.INSTANCE.setupQuickDialog(this).getDialog()!!
+        fun create(): Dialog = ClassHolder.INSTANCE.setupQuickDialog(this).getDialog()
 
         fun show(): QuickViewHolder {
             return ClassHolder.INSTANCE.setupQuickDialog(this).show()

@@ -10,6 +10,11 @@ import android.os.Build
 
 object ImageUtils {
 
+
+    fun decodeSampledBitmapFromResource(res: Resources, resId: Int): Bitmap {
+        return decodeSampledBitmapFromResource(res, resId, 0, 0)
+    }
+
     /**
      * 获取指定大小的位图
      *

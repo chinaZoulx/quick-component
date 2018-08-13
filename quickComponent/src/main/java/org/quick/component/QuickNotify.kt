@@ -32,7 +32,6 @@ object QuickNotify {
     val shortcutPackageName = javaClass.`package`.name + "-" + javaClass.simpleName + ":shortcutPackageName"
     val shortcutTargetName = javaClass.`package`.name + "-" + javaClass.simpleName + ":shortcutTargetName"
 
-    val data = javaClass.`package`.name + "-" + javaClass.simpleName + ":data"
     val action = javaClass.`package`.name + "-" + javaClass.simpleName + ":action"
     val actionCancel = javaClass.`package`.name + "-" + javaClass.simpleName + ":actionCancel"
     val actionClick = javaClass.`package`.name + "-" + javaClass.simpleName + ":actionClick"
@@ -206,25 +205,17 @@ object QuickNotify {
      */
     private fun setupShortcutOAfter(builder: ShortcutBuilder, onSuccessListener: (context: Context, intent: Intent) -> Unit) {
         notificationListeners.put(builder.targetName.hashCode(), onSuccessListener)
+        val callbackIntent = shortcutCallbackBuild(Intent(QuickAndroid.applicationContext, NotificationReceiver::class.java), builder)
+        val pendingIntentCancel = PendingIntent.getBroadcast(QuickAndroid.applicationContext, 0x0, callbackIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val shortcutIntent = Intent(Intent.ACTION_VIEW)
-        shortcutIntent.component = ComponentName(builder.packageName, builder.packageName + "." + builder.targetName)
-        shortcutIntent.putExtras(builder.dataBundle)
+        val targetIntent = shortcutCallbackBuild(Intent(Intent.ACTION_VIEW), builder).setComponent(ComponentName(builder.packageName, builder.packageName + "." + builder.targetName))
         val shortcutManagerCompat = ShortcutInfoCompat.Builder(QuickAndroid.applicationContext, builder.shortcutId)
                 .setIcon(IconCompat.createWithAdaptiveBitmap(builder.shortcutIcon))
                 .setShortLabel(builder.shortcutName)
-                .setIntent(shortcutIntent)
+                .setIntent(targetIntent)
                 .setAlwaysBadged()
                 .build()
 
-        val intent = Intent(QuickAndroid.applicationContext, NotificationReceiver::class.java)
-        intent.putExtra(actionNotificationId, builder.targetName.hashCode())
-        intent.putExtra(shortcutName, builder.shortcutName)
-        intent.putExtra(shortcutIcon, builder.shortcutIcon)
-        intent.putExtra(shortcutPackageName, builder.packageName)
-        intent.putExtra(shortcutTargetName, builder.targetName)
-        intent.putExtras(builder.dataBundle)
-        val pendingIntentCancel = PendingIntent.getBroadcast(QuickAndroid.applicationContext, 0x0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(QuickAndroid.applicationContext))
             if (ShortcutManagerCompat.requestPinShortcut(QuickAndroid.applicationContext, shortcutManagerCompat, pendingIntentCancel.intentSender))
             else QuickToast.showToastDefault("添加失败")
@@ -238,24 +229,29 @@ object QuickNotify {
     private fun setupShortcutOBefore(builder: ShortcutBuilder, onSuccessListener: (context: Context, intent: Intent) -> Unit) {
         notificationListeners.put(builder.targetName.hashCode(), onSuccessListener)
 
-        val shortcutIntent = Intent(Intent.ACTION_MAIN).setComponent(ComponentName(builder.packageName, builder.packageName + "." + builder.targetName))
-        shortcutIntent.addCategory(Intent.CATEGORY_LAUNCHER)
-        shortcutIntent.putExtras(builder.dataBundle)
-        shortcutIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        val targetIntent = shortcutCallbackBuild(Intent(Intent.ACTION_MAIN), builder).setComponent(ComponentName(builder.packageName, builder.packageName + "." + builder.targetName))
+        targetIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        targetIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
 
-        val shortcut = Intent(actionShortcut)
-        shortcut.putExtra("duplicate", false)
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, builder.shortcutName)
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON, builder.shortcutIcon)
+        val shortcutIntent = shortcutCallbackBuild(Intent(actionShortcut), builder)
+        shortcutIntent.putExtra("duplicate", false)
+        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, targetIntent)
+        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, builder.shortcutName)
+        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, builder.shortcutIcon)
+        QuickAndroid.applicationContext.sendBroadcast(shortcutIntent)
+    }
 
-        shortcut.putExtra(actionNotificationId, builder.targetName.hashCode())
-        shortcut.putExtra(shortcutName, builder.shortcutName)
-        shortcut.putExtra(shortcutIcon, builder.shortcutIcon)
-        shortcut.putExtra(shortcutPackageName, builder.packageName)
-        shortcut.putExtra(shortcutTargetName, builder.targetName)
-        shortcut.putExtras(builder.dataBundle)
-        QuickAndroid.applicationContext.sendBroadcast(shortcut)
+    /**
+     * 快捷方式回调数据构建
+     */
+    private fun shortcutCallbackBuild(intent: Intent, builder: ShortcutBuilder): Intent {
+        intent.putExtra(actionNotificationId, builder.targetName.hashCode())
+        intent.putExtra(shortcutName, builder.shortcutName)
+        intent.putExtra(shortcutIcon, builder.shortcutIcon)
+        intent.putExtra(shortcutPackageName, builder.packageName)
+        intent.putExtra(shortcutTargetName, builder.targetName)
+        intent.putExtras(builder.dataBundle)
+        return intent
     }
 
     fun cancelNotify(notificationId: Int) {

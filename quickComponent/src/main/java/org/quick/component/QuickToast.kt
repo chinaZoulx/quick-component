@@ -24,7 +24,7 @@ open class QuickToast {
 
     open val context get() = QuickAndroid.applicationContext
 
-    fun setupToast(builder: Builder): QuickToast {
+    private fun setupToast(builder: Builder): QuickToast {
         this.builder = builder
         return this
     }
@@ -56,7 +56,7 @@ open class QuickToast {
 
     companion object {
         fun showToastDefault(msg: String?, vararg params: Any) {
-            Builder().build().showToast(msg, params)
+            Builder().showToast(msg, params)
         }
     }
 
@@ -94,8 +94,10 @@ open class QuickToast {
             return this
         }
 
-        fun build() = ClassHolder.INSTANCE.setupToast(this)
-
         fun create(msg: String?) = ClassHolder.INSTANCE.setupToast(this).configToast(msg)
+
+        fun showToast(msg: String?, vararg params: Any) {
+            ClassHolder.INSTANCE.setupToast(this).showToast(msg, params)
+        }
     }
 }

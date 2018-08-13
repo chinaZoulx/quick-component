@@ -1,85 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/contentTv"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:gravity="center"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toTopOf="@+id/shareTv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tempTv"
+        android:id="@+id/sampleTv0"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:minHeight="50dp"
-        android:text="测试通知"
-        app:layout_constraintBottom_toTopOf="@+id/shareTv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contentTv" />
+        android:text="快速普通通知"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/shareTv"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:id="@+id/sampleTv1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:text="测试异步"
-        app:layout_constraintBottom_toTopOf="@+id/shortcutTv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempTv" />
-    <TextView
-        android:id="@+id/shortcutTv"
-        android:layout_width="0dp"
-        android:background="?attr/selectableItemBackground"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="测试快捷方式"
-        app:layout_constraintBottom_toTopOf="@+id/shortcutChangeTv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareTv" />
+        android:text="快速进度通知"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/shortcutChangeTv"
-        android:layout_width="0dp"
+        android:id="@+id/sampleTv2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:background="?attr/selectableItemBackground"
-        android:layout_height="50dp"
         android:gravity="center"
-        android:text="测试更改原生快捷方式"
-        app:layout_constraintBottom_toTopOf="@+id/imgIv1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shortcutTv" />
+        android:text="快速异步线程"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/imgIv1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/imgIv2"
-        app:layout_constraintTop_toBottomOf="@+id/shortcutChangeTv" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/imgIv2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/imgIv1"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imgIv1" />
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/sampleTv3"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="异步计时"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="是否反转" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sampleTv4"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="快速弹框Dialog"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sampleTv5"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="快速广播"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sampleTv6"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="快速适配器"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sampleTv7"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="快速存取本地数据"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sampleTv8"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="快速Toast"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sampleTv9"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="快速通知-桌面快捷方式"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+</LinearLayout>

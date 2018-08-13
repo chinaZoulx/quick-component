@@ -20,11 +20,9 @@ object QuickASync {
     /**
      * 异常线程处理数据，然后返回值
      */
-    fun <T> async(onASyncListener: OnASyncListener<T>) {
-        executorService.submit {
-            val value = onASyncListener.onASync()
-            mainHandler.post { onASyncListener.onAccept(value) }
-        }
+    fun <T> async(onASyncListener: OnASyncListener<T>) = executorService.submit {
+        val value = onASyncListener.onASync()
+        mainHandler.post { onASyncListener.onAccept(value) }
     }
 
     /**
@@ -32,23 +30,31 @@ object QuickASync {
      * @param interval 间隔时间，单位：毫秒
      * @param maxSteps 最大步数
      */
-    fun <T> async(onIntervalListener: OnIntervalListener<T>, interval: Long, maxSteps: Long, isReversal: Boolean = false) {
-        executorService.submit {
-            var steps = if (isReversal) maxSteps else 0
-            if (isReversal)
-                while (steps > 0) {
-                    steps--
-                    mainHandler.post { onIntervalListener.onNext(steps as T) }
-                    Thread.sleep(interval)
-                }
-            else
-                while (steps < maxSteps) {
-                    steps++
-                    mainHandler.post { onIntervalListener.onNext(steps as T) }
-                    Thread.sleep(interval)
-                }
-            mainHandler.post { onIntervalListener.onAccept(steps as T) }
-        }
+    fun <T> async(onIntervalListener: OnIntervalListener<T>, interval: Long, maxSteps: Long, isReversal: Boolean = false) = executorService.submit {
+        var steps = if (isReversal) maxSteps else 0
+        if (isReversal)
+            while (steps > 0) {
+                steps--
+                mainHandler.post { onIntervalListener.onNext(steps as T) }
+                Thread.sleep(interval)
+            }
+        else
+            while (steps < maxSteps) {
+                steps++
+                mainHandler.post { onIntervalListener.onNext(steps as T) }
+                Thread.sleep(interval)
+            }
+        mainHandler.post { onIntervalListener.onAccept(steps as T) }
+    }
+
+    /**
+     * 延迟
+     * @param delayTime 延迟频数
+     */
+    fun async(onEndListener: () -> Unit, delayTime: Long) {
+        mainHandler.postDelayed({
+            onEndListener.invoke()
+        }, delayTime)
     }
 
 

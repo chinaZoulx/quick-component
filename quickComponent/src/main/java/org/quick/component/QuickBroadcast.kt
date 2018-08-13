@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.support.annotation.NonNull
 import android.util.SparseArray
+import java.io.Serializable
 
 /**
  * @describe 方便的使用动态广播
@@ -24,7 +26,7 @@ object QuickBroadcast {
         override fun onReceive(context: Context?, intent: Intent) {
             val actions = intent.getStringArrayExtra(ACTION)
             var action = ""
-            for (index in 0 until onBroadcastListenerActions.size()) {
+            for (index in 0 until onBroadcastListenerActions.size())
                 if (onBroadcastListenerActions.valueAt(index).any { tempAction ->
                             actions.any {
                                 if (it == tempAction) {
@@ -32,10 +34,8 @@ object QuickBroadcast {
                                     true
                                 } else false
                             }
-                        }) {
+                        })
                     onBroadcastListeners[onBroadcastListenerActions.keyAt(index)]?.invoke(action, intent)
-                }
-            }
         }
     }
 
@@ -54,26 +54,22 @@ object QuickBroadcast {
     }
 
     /**
-     * @param binder 绑定者，消息回调依赖此目标。若此目标重复将最后一个有效
+     * @param binder 绑定者，消息回调依赖此目标。若此目标重复将最后一个注册的有效
      * @param onMsgListener 消息回调
      * @param action 接收目标
      */
-    fun addBroadcastListener(binder: Any?, onMsgListener: (action: String, intent: Intent) -> Unit, vararg action: String) {
-        if (binder != null) {
-            onBroadcastListeners.put(binder.hashCode(), onMsgListener)
-            onBroadcastListenerActions.put(binder.hashCode(), action as Array<String>?)
-        }
+    fun addBroadcastListener(binder: Any, onMsgListener: (action: String, intent: Intent) -> Unit, vararg action: String) {
+        onBroadcastListeners.put(binder.hashCode(), onMsgListener)
+        onBroadcastListenerActions.put(binder.hashCode(), action as Array<String>?)
     }
 
     /**
      * 移除消息回调
      * @param binder 绑定者
      */
-    fun removeBroadcastListener(binder: Any?) {
-        if (binder != null) {
-            onBroadcastListeners.remove(binder.hashCode())
-            onBroadcastListenerActions.remove(binder.hashCode())
-        }
+    fun removeBroadcastListener(binder: Any) {
+        onBroadcastListeners.remove(binder.hashCode())
+        onBroadcastListenerActions.remove(binder.hashCode())
     }
 
     /**
@@ -82,5 +78,71 @@ object QuickBroadcast {
     fun resetInternal() {
         this.onBroadcastListenerActions.clear()
         this.onBroadcastListeners.clear()
+    }
+
+    class Builder {
+        var intent: Intent = Intent()
+
+        fun addParams(key: String, vararg value: String): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Float): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Int): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Double): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Byte): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: CharSequence): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Boolean): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Long): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, vararg value: Short): Builder {
+            if (value.size == 1) intent.putExtra(key, value[0]) else intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, value: ArrayList<String>): Builder {
+            intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, value: Bundle): Builder {
+            intent.putExtra(key, value)
+            return this
+        }
+
+        fun addParams(key: String, value: Serializable): Builder {
+            intent.putExtra(key, value)
+            return this
+        }
+
+        fun build() = intent
     }
 }

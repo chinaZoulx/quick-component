@@ -13,6 +13,9 @@ import android.content.pm.PackageManager
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.*
+import android.widget.Toast
+import org.quick.component.callback.OnClickListener2
+import org.quick.component.utils.DevicesUtils
 import org.quick.component.utils.ImageUtils
 
 
@@ -22,98 +25,115 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        contentTv.setBackgroundResource(ViewUtils.getSystemAttrTypeValue(this, R.attr.selectableItemBackgroundBorderless).resourceId)
-        contentTv.setOnClickListener {
-            QuickToast.showToastDefault("fdsfdf")
-        }
-        shareTv.setOnClickListener {
-            //            imgIv1.setImageBitmap(ImageUtils.cropCircle(ImageUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_launcher, it.measuredWidth, it.measuredHeight)))
-//            imgIv2.setImageBitmap(ImageUtils.cropRoundRect(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher), FormatUtils.formatDip2Px(10f)))
-//            Log2.e(CheckUtils.isShowSoftInput(this@MainActivity).toString())
-//            DevicesUtils.installAPK(File("/storage/emulated/0/Downloads/1.7.2_201807130__172_jiagu_sign.apk1.7.2_201807130_开心红包_172_jiagu_sign.apk"))
-            QuickASync.async(object : QuickASync.OnASyncListener<String> {
-                override fun onASync(): String {
-                    return if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
-                }
+        val onClickListener2 = object : OnClickListener2() {
+            override fun onClick2(view: View) {
+                when (view.id) {
+                    R.id.sampleTv0 -> {//快速普通通知
+                        QuickNotify.notifyTempNormal(R.mipmap.ic_launcher2, "这是标题", "我是弹来耍的，任性！")
+                    }
+                    R.id.sampleTv1 -> {//快速进度通知
+                        QuickASync.async(object : QuickASync.OnIntervalListener<Int> {
+                            override fun onNext(value: Int) {
+                                QuickNotify.notifyTempProgresses(1, R.mipmap.ic_launcher, "这是标题", "这是内容", value)
+                            }
 
-                override fun onAccept(value: String) {
-                    Log2.e("onASync:$value")
-                    val temp = if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
-                    Log2.e("onAccept:$temp")
-                }
-            })
+                            override fun onAccept(value: Int) {
+                                QuickNotify.notifyTempProgressEnd(1, R.mipmap.ic_launcher, "这是标题", "这是内容", null) { context, intent ->
+                                    QuickToast.showToastDefault("点击了")
+                                }
+                            }
+                        }, 500, 100, false)
+                    }
+                    R.id.sampleTv2 -> {//快速异步线程
+                        QuickASync.async(object : QuickASync.OnASyncListener<String> {
+                            override fun onASync(): String {
+                                return if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
+                            }
 
-            QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
-                override fun onNext(value: Long) {
-                    shareTv.text = String.format("测试异步(%d)", value)
-                }
+                            override fun onAccept(value: String) {
+                                Log2.e("onASync:$value")
+                                val temp = if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
+                                Log2.e("onAccept:$temp")
+                            }
+                        })
+                    }
+                    R.id.sampleTv3 -> {//异步计时
+                        val test = QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
+                            override fun onNext(value: Long) {
+                                sampleTv3.text = String.format("异步计时(%d)", value)
+                            }
 
-                override fun onAccept(value: Long) {
-                    shareTv.text = "测试异步(End)"
-                }
+                            override fun onAccept(value: Long) {
+                                sampleTv3.text = "异步计时(End)"
+                            }
+                        }, 1000, 10, checkbox.isChecked)
 
-            }, 1000, 10, true)
-        }
-        imgIv1.setOnClickListener { QuickStartActivity.startActivity(this@MainActivity, QuickStartActivity.Builder(this@MainActivity, RvListActivity::class.java).build()) }
-        imgIv2.setOnClickListener {
-            QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialog_test).create()
-            QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialog_test).setWindowPadding(100, 0, 100, 0).show().setText(R.id.leftTv, "取消", View.OnClickListener {
-                QuickToast.showToastDefault("点击了取消")
-                QuickDialog.dismiss()
-            }).setText(R.id.rightTv, "确定", View.OnClickListener {
-                QuickToast.showToastDefault("点击了确定")
-                QuickDialog.dismiss()
-            })
-        }
-        tempTv.setOnClickListener {
-            QuickASync.async(object : QuickASync.OnIntervalListener<Int> {
-                override fun onNext(value: Int) {
-                    QuickNotify.notifyTempProgresses(1, R.mipmap.ic_launcher, "这是标题", "这是内容", value)
-                }
-
-                override fun onAccept(value: Int) {
-                    QuickNotify.notifyTempProgressEnd(1, R.mipmap.ic_launcher, "这是标题", "这是内容", null) { context, intent ->
-                        QuickToast.showToastDefault("点击了")
+                        QuickASync.async({
+                            test.cancel(true)
+                        }, 5000)
+                    }
+                    R.id.sampleTv4 -> {//快速弹框Dialog
+                        QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialog_test).setWindowPadding(100, 0, 100, 0).show().setText(R.id.leftTv, "取消", View.OnClickListener {
+                            QuickToast.showToastDefault("点击了取消")
+                            QuickDialog.dismiss()
+                        }).setText(R.id.rightTv, "确定", View.OnClickListener {
+                            QuickToast.showToastDefault("点击了确定")
+                            QuickDialog.dismiss()
+                        })
+                    }
+                    R.id.sampleTv5 -> {//快速广播
+                        val intent=QuickBroadcast.Builder().addParams("data", "这是一个字符串", "这又是一个字符串").build()
+                        QuickBroadcast.sendBroadcast(intent, "testAction")
+                    }
+                    R.id.sampleTv6 -> {//快速适配器
+                        QuickStartActivity.startActivity(this@MainActivity, QuickStartActivity.Builder(this@MainActivity, RvListActivity::class.java).addParams("TITLE", "这是标题").build())
+                    }
+                    R.id.sampleTv7 -> {//快速存取本地数据
+                        QuickSPHelper.putValue("A", "valueA").putValue("B", 1L).putValue("C", true)
+                        QuickToast.Builder().setDuration(Toast.LENGTH_LONG).showToast(QuickSPHelper.getValue("B", 0L).toString())
+                    }
+                    R.id.sampleTv8 -> {//快速Toast
+                        QuickToast.showToastDefault("这是一个Toast")
+                    }
+                    R.id.sampleTv9 -> {//快速通知-桌面快捷方式
+                        QuickNotify.notifyDesktopShortcut(QuickNotify.ShortcutBuilder(Math.random().toString())
+                                .setActivity(packageName, RvListActivity::class.java.simpleName, Bundle())
+                                .setShortcut("this is a name", ImageUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_launcher2))) { context, intent ->
+                            QuickToast.showToastDefault("已成功创建" + intent.getStringExtra(QuickNotify.shortcutName))
+                        }
                     }
                 }
-            }, 500, 100, false)
-        }
-        shortcutChangeTv.setOnClickListener {
-            if (it.tag != null && it.tag as Boolean) {
-                it.tag = false
-                disableComponent(ComponentName(this, "org.quick.component.sample.MainAliasActivity"))
-                enableComponent(ComponentName(this, "org.quick.component.sample.MainActivity"))
-            } else {
-                it.tag = true
-                disableComponent(ComponentName(this, "org.quick.component.sample.MainActivity"))
-                enableComponent(ComponentName(this, "org.quick.component.sample.MainAliasActivity"))
             }
         }
-//        var intent = Intent()
-//        QuickNotify.notifyTempNormal(R.mipmap.ic_launcher, "这是标题", "这是内容", intent) { context, intent ->
-//            QuickToast.showToastDefault("点击了通知")
-//        }
-//        QuickNotify.notifyTempProgress(1, R.mipmap.ic_launcher, "这是标题", "这是内容")
-//        QuickSPHelper.putValue("A", "valueA").putValue("B", 1L).putValue("C", true)
-//        QuickSPHelper.getValue("B", 0L)
-        shortcutTv.setOnClickListener {
-            QuickNotify.notifyDesktopShortcut(QuickNotify.ShortcutBuilder(Math.random().toString()).setActivity(packageName, RvListActivity::class.java.simpleName, Bundle()).setShortcut(Math.random().toString(), ImageUtils.drawableToBitmap(getDrawable(R.mipmap.ic_launcher)))) { context, intent ->
-                QuickToast.showToastDefault("已成功创建" + intent.getStringExtra(QuickNotify.shortcutName))
-            }
+        for (index in 0..9) {
+            val id = ViewUtils.getViewId("sampleTv", index.toString())
+            findViewById<View>(id).setOnClickListener(onClickListener2)
+            findViewById<View>(id).setBackgroundResource(ViewUtils.getSystemAttrTypeValue(this, R.attr.selectableItemBackground).resourceId)
         }
-    }
 
-    fun changeIcon(componentName: ComponentName) {
-        packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
-//        pm.setComponentEnabledSetting(ComponentName(this, activityPath), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
-        //重启桌面 加速显示
-//        restartSystemLauncher(pm);
+        QuickBroadcast.addBroadcastListener(this, { action, intent ->
+            QuickToast.showToastDefault("收到一个广播$action")
+        }, "testAction","testAction2","testAction3")
+//        val intent = Intent(this, RvListActivity::class.java)
+//        val requestCode = 0x123
+//        QuickStartActivity.startActivity(this, intent) { resultCode: Int, data: Intent? ->
+//
+//        }
+//
+//        val intent = Intent(this, MainActivity::class.java)
+//        val requestCode = 0x123
+//        QuickStartActivity.startActivity(this, intent) { resultCode: Int, data: Intent? ->
+//
+//        }
+
+//        startActivityForResult(intent, requestCode)
+
     }
 
     //启用组件
     fun enableComponent(componentName: ComponentName) {
         packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
-        restartSystemLauncher(packageManager)
+        DevicesUtils.restartSystemLauncher()
     }
 
     //隐藏组件
@@ -121,16 +141,8 @@ class MainActivity : AppCompatActivity() {
         packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
     }
 
-    fun restartSystemLauncher(pm: PackageManager) {
-        val am = getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
-        val i = Intent(Intent.ACTION_MAIN)
-        i.addCategory(Intent.CATEGORY_HOME)
-        i.addCategory(Intent.CATEGORY_DEFAULT)
-        val resolves = pm.queryIntentActivities(i, 0)
-        for (res in resolves) {
-            if (res.activityInfo != null) {
-                am.killBackgroundProcesses(res.activityInfo.packageName)
-            }
-        }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        QuickStartActivity.onActivityResult(requestCode, resultCode, data)
     }
 }

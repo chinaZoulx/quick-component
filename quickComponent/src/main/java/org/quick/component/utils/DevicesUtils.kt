@@ -2,6 +2,7 @@ package org.quick.component.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -249,7 +250,7 @@ object DevicesUtils {
     /**
      * 全面屏适配
      */
-    fun setMaxAspect() {
+    fun compatMaxAspect() {
         var applicationInfo: ApplicationInfo? = null
         try {
             applicationInfo = QuickAndroid.applicationContext.packageManager.getApplicationInfo(QuickAndroid.applicationContext.packageName, PackageManager.GET_META_DATA)
@@ -261,5 +262,21 @@ object DevicesUtils {
             throw IllegalArgumentException(" get application info = null, has no meta data! ")
         }
         applicationInfo.metaData.putString("android.max_aspect", "2.1")
+    }
+
+    /**
+     * 重启Launcher
+     */
+    fun restartSystemLauncher() {
+        val am = QuickAndroid.applicationContext.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
+        val i = Intent(Intent.ACTION_MAIN)
+        i.addCategory(Intent.CATEGORY_HOME)
+        i.addCategory(Intent.CATEGORY_DEFAULT)
+        val resolves = QuickAndroid.applicationContext.packageManager.queryIntentActivities(i, 0)
+        for (res in resolves) {
+            if (res.activityInfo != null) {
+                am.killBackgroundProcesses(res.activityInfo.packageName)
+            }
+        }
     }
 }
