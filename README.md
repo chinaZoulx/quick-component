@@ -9,7 +9,7 @@ implementation 'org.quick.android:quick-component:0.0.4'
 ~~~java
 QuickAndroid.init(this)
 ~~~
-## 组件内容较多，示例请查看Demo[我的博客](https://blog.csdn.net/column/details/25839.html)
+## 组件内容较多，示例请查看Demo或者去[我的博客](https://blog.csdn.net/column/details/25839.html)
 ## QuickAdapter
 快速创建RecyclerView的Adapter，高度灵活设置item参数,padding,margin都可以设置，集成了多种回调事件，OnItemClickListener,OnItemLongClickListener,OnCheckListener,OnClickLister。
 ### 简单使用示例
