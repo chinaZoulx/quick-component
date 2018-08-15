@@ -5,11 +5,11 @@ Android 快速开发组件，使用便捷个性化。纯代码编写，除了Ada
 implementation 'org.quick.android:quick-component:0.0.4'
 ~~~
 ## 组件使用前需初始化：
-一次初始化即可
+在Application中一次初始化即可
 ~~~java
 QuickAndroid.init(this)
 ~~~
-## 组件内容较多，示例请查看
+## [组件内容较多，示例请查看我的博客(https://blog.csdn.net/column/details/25839.html) "博客地址"]
 ## QuickAdapter
 快速创建RecyclerView的Adapter，高度灵活设置item参数,padding,margin都可以设置，集成了多种回调事件，OnItemClickListener,OnItemLongClickListener,OnCheckListener,OnClickLister。
 ### 简单使用示例
