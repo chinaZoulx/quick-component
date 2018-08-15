@@ -71,6 +71,5 @@ object QuickSPHelper {
         return mSharedPreferences.getStringSet(key, defValues)
     }
 
-    val all: Map<String, *>
-        get() = mSharedPreferences.all
+    val all: Map<String, *> get() = mSharedPreferences.all
 }

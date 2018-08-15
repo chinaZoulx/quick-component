@@ -38,10 +38,9 @@ open class QuickDialog private constructor() {
     fun getDialog(): Dialog {
         if (dialog == null || viewHolder == null || viewHolder?.itemView != builder.layoutView || builder.isRewrite) {
             dialog = Dialog(builder.context, builder.style)
-            dialog!!.setContentView(viewHolder().itemView)
+            dialog?.setContentView(viewHolder().itemView)
             dialog?.window?.setGravity(builder.gravity)
             dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog?.setCanceledOnTouchOutside(builder.canceledOnTouchOutside)
             dialog?.window?.setLayout(builder.width, builder.height)
             dialog?.window?.decorView?.setPadding(builder.paddingLeft, builder.paddingTop, builder.paddingRight, builder.paddingBottom)
             dialog?.setCanceledOnTouchOutside(builder.canceledOnTouchOutside)
@@ -138,8 +137,6 @@ open class QuickDialog private constructor() {
 
         fun create(): Dialog = ClassHolder.INSTANCE.setupQuickDialog(this).getDialog()
 
-        fun show(): QuickViewHolder {
-            return ClassHolder.INSTANCE.setupQuickDialog(this).show()
-        }
+        fun show(): QuickViewHolder = ClassHolder.INSTANCE.setupQuickDialog(this).show()
     }
 }

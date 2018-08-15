@@ -16,7 +16,7 @@ import android.widget.Toast
  * @from https://github.com/SpringSmell/quick.library
  * @email chrisSpringSmell@gmail.com
  */
-open class QuickToast {
+open class QuickToast private constructor() {
     private val mainHandler: Handler by lazy { return@lazy Handler(Looper.getMainLooper()) }
     private lateinit var builder: Builder
     private var toast: Toast? = null
@@ -29,11 +29,10 @@ open class QuickToast {
         return this
     }
 
-    fun showToast(msg: String?, vararg params: Any) {
-        var showMsg = msg
-        if (!TextUtils.isEmpty(msg) && params.isNotEmpty())
-            showMsg = String.format(msg!!, params)
-        mainHandler.post { configToast(showMsg).show() }
+    fun showToast(msg: String?): QuickViewHolder {
+        val toast=configToast(msg)
+        mainHandler.post { toast.show() }
+        return holder
     }
 
     private fun configToast(msg: String?): Toast {
@@ -55,8 +54,8 @@ open class QuickToast {
     }
 
     companion object {
-        fun showToastDefault(msg: String?, vararg params: Any) {
-            Builder().showToast(msg, params)
+        fun showToastDefault(msg: String?) {
+            Builder().showToast(msg)
         }
     }
 
@@ -94,10 +93,10 @@ open class QuickToast {
             return this
         }
 
+        fun build() = ClassHolder.INSTANCE.setupToast(this)
+
         fun create(msg: String?) = ClassHolder.INSTANCE.setupToast(this).configToast(msg)
 
-        fun showToast(msg: String?, vararg params: Any) {
-            ClassHolder.INSTANCE.setupToast(this).showToast(msg, params)
-        }
+        fun showToast(msg: String?) = ClassHolder.INSTANCE.setupToast(this).showToast(msg)
     }
 }

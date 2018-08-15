@@ -8,7 +8,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         QuickAndroid.init(this)
-        QuickAndroid.appBaseName = ""
+        QuickAndroid.appBaseName = "dfds"
         Log2.isDebug = true
     }
 }

@@ -14,7 +14,7 @@ import java.util.concurrent.Executors
  */
 object QuickASync {
 
-    private val executorService = Executors.newFixedThreadPool(10)
+    private val executorService = Executors.newFixedThreadPool(20)
     private val mainHandler: Handler by lazy { return@lazy Handler(Looper.getMainLooper()) }
 
     /**

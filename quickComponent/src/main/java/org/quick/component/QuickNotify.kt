@@ -247,7 +247,7 @@ object QuickNotify {
     private fun shortcutCallbackBuild(intent: Intent, builder: ShortcutBuilder): Intent {
         intent.putExtra(actionNotificationId, builder.targetName.hashCode())
         intent.putExtra(shortcutName, builder.shortcutName)
-        intent.putExtra(shortcutIcon, builder.shortcutIcon)
+//        intent.putExtra(shortcutIcon, builder.shortcutIcon)/*8.0无法协带*/
         intent.putExtra(shortcutPackageName, builder.packageName)
         intent.putExtra(shortcutTargetName, builder.targetName)
         intent.putExtras(builder.dataBundle)
@@ -258,6 +258,9 @@ object QuickNotify {
         notificationManager.cancel(notificationId)
     }
 
+    /**
+     * @param shortcutId
+     */
     class ShortcutBuilder(var shortcutId: String = "") {
         var packageName: String = ""
         var targetName: String = ""
@@ -271,7 +274,11 @@ object QuickNotify {
         }
 
         /**
-         * @param targetName 目标ActivityNam
+         * example: 包路径为org.quick.component 需要跳转到ui下面的MainActivity，那此时总路径应当为org.quick.component.ui.MainActivity
+         *
+         * @param packageName 包路径
+         * @param targetName 目标Activity路径
+         * @param dataBundle 传递到目标的数据集合
          */
         fun setActivity(packageName: String, targetName: String, dataBundle: Bundle): ShortcutBuilder {
             this.packageName = packageName

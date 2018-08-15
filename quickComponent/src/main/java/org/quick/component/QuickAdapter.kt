@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.CompoundButton
 import org.quick.component.utils.FormatUtils
 import org.quick.component.utils.ViewUtils
@@ -34,9 +35,9 @@ abstract class QuickAdapter<M, H : QuickViewHolder> : RecyclerView.Adapter<H>() 
      *
      * @return
      */
-    abstract fun onResultLayoutResId(): Int
+    abstract fun onResultLayoutResId(viewType: Int): Int
 
-    abstract fun onBindData(holder: H, position: Int, itemData: M)
+    abstract fun onBindData(holder: H, position: Int, itemData: M, viewType: Int)
 
     override fun getItemCount(): Int {
         return dataList.size
@@ -129,8 +130,7 @@ abstract class QuickAdapter<M, H : QuickViewHolder> : RecyclerView.Adapter<H>() 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): H {
         context = parent.context
-        val view = LayoutInflater.from(context).inflate(onResultLayoutResId(), parent, false)
-        return setupLayout(view)
+        return setupLayout(LayoutInflater.from(context).inflate(onResultLayoutResId(viewType), parent,false))
     }
 
     fun setupLayout(itemView: View): H {
@@ -149,7 +149,7 @@ abstract class QuickAdapter<M, H : QuickViewHolder> : RecyclerView.Adapter<H>() 
     override fun onBindViewHolder(holder: H, position: Int) {
         setupListener(holder, position)
         setupLayout(holder, position)
-        onBindData(holder, position, getDataList()[position])
+        onBindData(holder, position, getDataList()[position], getItemViewType(position))
     }
 
     /**
@@ -234,11 +234,11 @@ abstract class QuickAdapter<M, H : QuickViewHolder> : RecyclerView.Adapter<H>() 
         }
     }
 
-    fun remove(position: Int) {
+    open fun remove(position: Int) {
         remove(getItem(position))
     }
 
-    fun remove(m: M) {
+    open fun remove(m: M) {
         getDataList().remove(m)
         notifyDataSetChanged()
     }

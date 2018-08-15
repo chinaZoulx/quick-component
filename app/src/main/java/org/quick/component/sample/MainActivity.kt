@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
                         QuickNotify.notifyTempNormal(R.mipmap.ic_launcher2, "这是标题", "我是弹来耍的，任性！")
                     }
                     R.id.sampleTv1 -> {//快速进度通知
+                        QuickNotify.notifyTempProgress(1,R.mipmap.ic_launcher2,"这是标题","这是内容")
                         QuickASync.async(object : QuickASync.OnIntervalListener<Int> {
                             override fun onNext(value: Int) {
                                 QuickNotify.notifyTempProgresses(1, R.mipmap.ic_launcher, "这是标题", "这是内容", value)
@@ -68,21 +69,22 @@ class MainActivity : AppCompatActivity() {
                             }
                         }, 1000, 10, checkbox.isChecked)
 
-                        QuickASync.async({
+                        QuickASync.async({/*5秒后暂停*/
                             test.cancel(true)
                         }, 5000)
                     }
                     R.id.sampleTv4 -> {//快速弹框Dialog
-                        QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialog_test).setWindowPadding(100, 0, 100, 0).show().setText(R.id.leftTv, "取消", View.OnClickListener {
-                            QuickToast.showToastDefault("点击了取消")
-                            QuickDialog.dismiss()
-                        }).setText(R.id.rightTv, "确定", View.OnClickListener {
-                            QuickToast.showToastDefault("点击了确定")
-                            QuickDialog.dismiss()
-                        })
+                        QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialog_test).show()
+                                .setText(R.id.leftTv, "取消", View.OnClickListener {
+                                    QuickToast.showToastDefault("点击了取消")
+                                    QuickDialog.dismiss()
+                                }).setText(R.id.rightTv, "确定", View.OnClickListener {
+                                    QuickToast.showToastDefault("点击了确定")
+                                    QuickDialog.dismiss()
+                                })
                     }
                     R.id.sampleTv5 -> {//快速广播
-                        val intent=QuickBroadcast.Builder().addParams("data", "这是一个字符串", "这又是一个字符串").build()
+                        val intent = QuickBroadcast.Builder().addParams("data", "这是一个字符串", "这又是一个字符串").build()
                         QuickBroadcast.sendBroadcast(intent, "testAction")
                     }
                     R.id.sampleTv6 -> {//快速适配器
@@ -96,9 +98,11 @@ class MainActivity : AppCompatActivity() {
                         QuickToast.showToastDefault("这是一个Toast")
                     }
                     R.id.sampleTv9 -> {//快速通知-桌面快捷方式
-                        QuickNotify.notifyDesktopShortcut(QuickNotify.ShortcutBuilder(Math.random().toString())
-                                .setActivity(packageName, RvListActivity::class.java.simpleName, Bundle())
-                                .setShortcut("this is a name", ImageUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_launcher2))) { context, intent ->
+                        val shortBuilder=QuickNotify.ShortcutBuilder("这是shortId")
+                                .setActivity(packageName, RvListActivity::class.java.simpleName)
+                                .setShortcut("this is a name", ImageUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_launcher))
+
+                        QuickNotify.notifyDesktopShortcut(shortBuilder) { context, intent ->
                             QuickToast.showToastDefault("已成功创建" + intent.getStringExtra(QuickNotify.shortcutName))
                         }
                     }
@@ -113,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         QuickBroadcast.addBroadcastListener(this, { action, intent ->
             QuickToast.showToastDefault("收到一个广播$action")
-        }, "testAction","testAction2","testAction3")
+        }, "testAction", "testAction2", "testAction3")
 //        val intent = Intent(this, RvListActivity::class.java)
 //        val requestCode = 0x123
 //        QuickStartActivity.startActivity(this, intent) { resultCode: Int, data: Intent? ->

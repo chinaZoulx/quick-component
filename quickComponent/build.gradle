@@ -50,7 +50,7 @@ publish {
     userOrg = 'quick' //bintray账户下某个组织id
     groupId = 'org.quick.android' //maven仓库下库的包名，一般为模块包名，自定义
     artifactId = 'quick-component' //项目名称-自定义
-    publishVersion = '0.0.4' //版本号
+    publishVersion = '0.0.5' //版本号
     desc = 'This is a quick development component , convenient tools' //项目介绍，可以不写
     website = 'https://github.com/SpringSmell/quick-component' //项目主页，可以不写
 }
