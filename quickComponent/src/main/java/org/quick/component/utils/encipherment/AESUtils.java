@@ -21,7 +21,8 @@ public class AESUtils {
 
     /**
      * 加密
-     * @param seed 密钥
+     *
+     * @param seed      密钥
      * @param cleartext 待加密内容
      * @return 加密后的内容
      * @throws Exception
@@ -34,7 +35,8 @@ public class AESUtils {
 
     /**
      * 解密
-     * @param seed 密钥
+     *
+     * @param seed      密钥
      * @param encrypted 加密之后的内容
      * @return 解密后的内容
      * @throws Exception
@@ -48,20 +50,20 @@ public class AESUtils {
 
 
     private static byte[] getRawKey(byte[] seed) throws Exception {
-        KeyGenerator kgen = KeyGenerator.getInstance ( "AES" );
-        SecureRandom sr   = SecureRandom.getInstance ( "SHA1PRNG", "Crypto" );
+        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
         sr.setSeed(seed);
         kgen.init(128, sr); // 192 and 256 bits may not be available
-        SecretKey skey = kgen.generateKey ();
-        byte[]    raw  = skey.getEncoded();
+        SecretKey skey = kgen.generateKey();
+        byte[] raw = skey.getEncoded();
         return raw;
     }
 
 
     private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec( raw, "AES");
-        Cipher        cipher   = Cipher.getInstance ( "AES" );
-        cipher.init (Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec ( new byte[cipher.getBlockSize ()]) );
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[cipher.getBlockSize()]));
         byte[] encrypted = cipher.doFinal(clear);
         return encrypted;
     }

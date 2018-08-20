@@ -10,8 +10,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.quick.component.*
 import org.quick.component.utils.ViewUtils
 import android.content.pm.PackageManager
-import android.app.Activity
-import android.app.ActivityManager
 import android.content.*
 import android.widget.Toast
 import org.quick.component.callback.OnClickListener2
@@ -32,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                         QuickNotify.notifyTempNormal(R.mipmap.ic_launcher2, "这是标题", "我是弹来耍的，任性！")
                     }
                     R.id.sampleTv1 -> {//快速进度通知
-                        QuickNotify.notifyTempProgress(1,R.mipmap.ic_launcher2,"这是标题","这是内容")
+                        QuickNotify.notifyTempProgress(1, R.mipmap.ic_launcher2, "这是标题", "这是内容")
                         QuickASync.async(object : QuickASync.OnIntervalListener<Int> {
                             override fun onNext(value: Int) {
                                 QuickNotify.notifyTempProgresses(1, R.mipmap.ic_launcher, "这是标题", "这是内容", value)
@@ -69,7 +67,8 @@ class MainActivity : AppCompatActivity() {
                             }
                         }, 1000, 10, checkbox.isChecked)
 
-                        QuickASync.async({/*5秒后暂停*/
+                        QuickASync.async({
+                            /*5秒后暂停*/
                             test.cancel(true)
                         }, 5000)
                     }
@@ -98,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                         QuickToast.showToastDefault("这是一个Toast")
                     }
                     R.id.sampleTv9 -> {//快速通知-桌面快捷方式
-                        val shortBuilder=QuickNotify.ShortcutBuilder("这是shortId")
+                        val shortBuilder = QuickNotify.ShortcutBuilder("这是shortId")
                                 .setActivity(packageName, RvListActivity::class.java.simpleName)
                                 .setShortcut("this is a name", ImageUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_launcher))
 
@@ -106,10 +105,24 @@ class MainActivity : AppCompatActivity() {
                             QuickToast.showToastDefault("已成功创建" + intent.getStringExtra(QuickNotify.shortcutName))
                         }
                     }
+                    R.id.sampleTv10 -> {//快速指纹验证
+                        QuickBiometric.startFingerprintListener { type, resultMsg ->
+                            when (type) {
+                                QuickBiometric.TYPE.AuthenticationSucceeded -> {/*成功*/
+                                    QuickToast.showToastDefault("验证成功：加密串-$resultMsg")
+                                }
+                                QuickBiometric.TYPE.AuthenticationFailed -> {/*失败*/
+                                    QuickToast.showToastDefault("验证失败")
+                                }
+                                else -> QuickToast.showToastDefault(resultMsg)/*错误*/
+                            }
+                            Log2.e(resultMsg)
+                        }
+                    }
                 }
             }
         }
-        for (index in 0..9) {
+        for (index in 0..10) {
             val id = ViewUtils.getViewId("sampleTv", index.toString())
             findViewById<View>(id).setOnClickListener(onClickListener2)
             findViewById<View>(id).setBackgroundResource(ViewUtils.getSystemAttrTypeValue(this, R.attr.selectableItemBackground).resourceId)
