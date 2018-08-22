@@ -176,17 +176,17 @@ object QuickBiometric {
     /**
      * 验证设备是否支持指纹功能
      */
-    fun checkDevicesSupport(onFingerprintListener: ((type: TYPE, resultMsg: String) -> Unit?)): Boolean = when {
+    fun checkDevicesSupport(onFingerprintListener: ((type: TYPE, resultMsg: String) -> Unit?)?): Boolean = when {
         !keyguardManager.isKeyguardSecure -> {
-            onFingerprintListener.invoke(TYPE.AuthenticationErrorKeyguardSecure, "验证失败，此设备未设置锁屏密码")
+            onFingerprintListener?.invoke(TYPE.AuthenticationErrorKeyguardSecure, "验证失败，此设备未设置锁屏密码")
             false
         }
         !fingerprintManager.isHardwareDetected -> {
-            onFingerprintListener.invoke(TYPE.AuthenticationErrorHardwareDetected, "验证失败，此设备不支持指纹功能")
+            onFingerprintListener?.invoke(TYPE.AuthenticationErrorHardwareDetected, "验证失败，此设备不支持指纹功能")
             false
         }
         !fingerprintManager.hasEnrolledFingerprints() -> {
-            onFingerprintListener.invoke(TYPE.AuthenticationErrorEnrolledFingerprints, "验证失败，此设备未录入指纹")
+            onFingerprintListener?.invoke(TYPE.AuthenticationErrorEnrolledFingerprints, "验证失败，此设备未录入指纹")
             false
         }
         else -> true

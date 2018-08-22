@@ -30,7 +30,7 @@ object DateUtils {
     private fun getCalendar() = Calendar.getInstance(Locale.CHINA)
 
     private fun getCalendar(date: Date): Calendar {
-        var calendar = Calendar.getInstance(Locale.CHINA)
+        val calendar = Calendar.getInstance(Locale.CHINA)
         calendar.time = date
         return calendar
     }
@@ -83,16 +83,10 @@ object DateUtils {
     /**
      * 默认为24小时制
      *
-     * @param l
+     * @param date
      * @return
      */
-    fun formatToLong(l: Long): Long? = formatToLong(l, formatDefault)
-
-    fun formatToLong(l: Long, patter: String): Long? = try {
-        getDateFormat(patter).parse(formatToStr(l, patter)).time
-    } catch (e: ParseException) {
-        getCurrentTimeInMillis()
-    }
+    fun formatToLong(date: Date): Long = date.time
 
     fun formatToLong(dateStr: String): Long = formatToLong(dateStr, formatDefault)
 
@@ -251,36 +245,55 @@ object DateUtils {
     }
 
     /**
-     * 格式化时间
-     *
-     * @param view
-     * @param timestamp
-     */
-    fun formatDate(timestamp: Long): String {
-        val day = timestamp / DAY
-        val hour = (timestamp - DAY * day) / HOURS
-        val minute = (timestamp - DAY * day - HOURS * hour) / MINUTE
-        val second = (timestamp - DAY * day - HOURS * hour - MINUTE * minute) / SECOND
-
-        val prefix = ""
-        return when {
-            day > 0 -> String.format("$prefix%s天%s时%s分%s秒", day, hour, minute, second)
-            hour > 0 -> String.format("$prefix%s时%s分%s秒", hour, minute, second)
-            minute > 0 -> String.format("$prefix%s分%s秒", minute, second)
-            else -> String.format("$prefix%s秒", second)
-        }
-    }
-
-    /**
      * 格式化秒表
+     * 有天的 02 11：11：12，534
+     * 有时的 11：11：12，534
+     * 有分的 11：12，534
+     * 有秒的 11：12，534
+     * 有毫秒 11：12，534
+     * @param timestamp 单位毫秒
      */
     fun formatDateStopwatch(timestamp: Long): String {
         return if (timestamp > 0) {
-            val minute = timestamp / MINUTE
-            val second = timestamp % MINUTE / SECOND
-            val millisecond = timestamp % MINUTE % SECOND / MILLISECOND
-            String.format("%s:%s,%s", if (minute in 0..9) "0$minute" else minute.toString(), if (second in 0..9) "0$second" else second.toString(), if (millisecond in 0..9) "0$millisecond" else millisecond.toString())
+            val day = timestamp / DateUtils.DAY
+            val hours = (timestamp - DateUtils.DAY * day) / DateUtils.HOURS
+            val minute = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hours) / DateUtils.MINUTE
+            val second = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hours - DateUtils.MINUTE * minute) / DateUtils.SECOND
+            val millisecond = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hours - DateUtils.MINUTE * minute - DateUtils.SECOND * second) / DateUtils.MILLISECOND
+            val tempDay = if (day in 0..9) "0$day" else day.toString()
+            val tempHours = if (hours in 0..9) "0$hours" else hours.toString()
+            val tempMinute = if (minute in 0..9) "0$minute" else minute.toString()
+            val tempSecond = if (second in 0..9) "0$second" else second.toString()
+            val tempMillisecond = if (millisecond in 0..9) "00$millisecond" else if (millisecond in 10..99) "0$millisecond" else millisecond.toString()
+
+            return when {
+                day > 0 -> String.format("%s %s:%s:%s,%s", tempDay, tempHours, tempMinute, tempSecond, tempMillisecond)
+                hours > 0 -> String.format("%s:%s:%s,%s", tempHours, tempMinute, tempSecond, tempMillisecond)
+                else -> String.format("%s:%s,%s", tempMinute, tempSecond, tempMillisecond)
+            }
         } else "00:00,00"
+    }
+
+    /**
+     * 格式化时间差
+     *
+     * @param timestamp
+     * @param postfix 前缀
+     * @param postfix 后缀
+     */
+    fun formatDateDifference(timestamp: Long, prefix: String, postfix: String): String {
+
+        val day = timestamp / DateUtils.DAY
+        val hour = (timestamp - DateUtils.DAY * day) / DateUtils.HOURS
+        val minute = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hour) / DateUtils.MINUTE
+        val second = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hour - DateUtils.MINUTE * minute) / DateUtils.SECOND
+
+        return when {
+            day > 0 -> String.format("$prefix%s天%s时%s分%s秒$postfix", day, hour, minute, second)
+            hour > 0 -> String.format("$prefix%s时%s分%s秒$postfix", hour, minute, second)
+            minute > 0 -> String.format("$prefix%s分%s秒$postfix", minute, second)
+            else -> String.format("$prefix%s秒$postfix", second)
+        }
     }
 
     fun getCurrentTimeInMillis() = getCalendar().timeInMillis

@@ -10,14 +10,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import org.quick.component.*
+import org.quick.component.utils.DateUtils
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class TestActivity : AppCompatActivity() {
 
@@ -78,7 +79,7 @@ class TestActivity : AppCompatActivity() {
         }
 
         val sharedPreferences = getSharedPreferences("this is a name", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("name", "this is a name").putInt("age", 1).commit()
+        sharedPreferences.edit().putString("name", "this is a name").putInt("age", 1).apply()
 
         sharedPreferences.getString("name", "")
         sharedPreferences.getInt("age", 0)
@@ -99,12 +100,77 @@ class TestActivity : AppCompatActivity() {
 //                ...
 //        viewHolder.getView<TextView>(R.id.toastMsgTv)
 //        viewHolder.getImageView(R.id.coverIv)
+
+        val date = Date()
+        val date2 = Date()
+        val date3 = Date()
+        val date4 = Date()
+        /*获取最大的时间*/
+        DateUtils.compareAfter(date, date2, date3, date4)
+        /*获取最小的时间*/
+        DateUtils.compareBefore(date, date2, date3, date4)
+
+        /*date>date2*/
+        DateUtils.after(date, date2)
+        /*date<date2*/
+        DateUtils.before(date, date2)
+        /*比较时间戳*/
+        DateUtils.after(System.currentTimeMillis(), 121321324548L)
+        /*使用时间字符串比较*/
+        DateUtils.after("2018-08-22 10:13", "2018-09-01 10:13")
+        /*还可以指定格式*/
+        DateUtils.after("2018-08-22 10:13", "2018-09-01 10:13", "yyyy-MM-dd HH:mm:ss")
+
+        /*格式化为时间*/
+        DateUtils.formatToDate(System.currentTimeMillis())
+        /*也可以指定格式*/
+        DateUtils.formatToDate("2018-08-22 10:13", "yyyy-MM-dd HH:mm:ss")
+
+        /*可以输出为多种格式*/
+        DateUtils.formatToLong(date)
+        DateUtils.formatToLong("2018-08-22 10:13")
+        DateUtils.formatToLong("2018-08-22 10:13", "yyyy-MM-dd HH:mm:ss")
+
+        DateUtils.formatToStr(date, "yyyy-MM-dd HH:mm:ss")
+        DateUtils.formatToStr(System.currentTimeMillis())
+
+        /*格式化为Date*/
+        val resultDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).parse("2018-08-22 10:13")
+        /*格式化为Long*/
+        val resultLong = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).parse("2018-08-22 10:13").time
+        /*格式化为String*/
+        val resultString = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(date)
+
+        formatDateDifference(date.time - date2.time, "还有：", "就可以采摘啦")
+        DateUtils.formatDateStopwatch(DateUtils.MILLISECOND * 50)
     }
 
     var dialog: Dialog? = null
     lateinit var titleTv: TextView
     lateinit var leftTv: TextView
     lateinit var rightTv: TextView
+
+    /**
+     * 格式化时间差
+     *
+     * @param timestamp
+     * @param postfix 前缀
+     * @param postfix 后缀
+     */
+    fun formatDateDifference(timestamp: Long, prefix: String, postfix: String): String {
+
+        val day = timestamp / DateUtils.DAY
+        val hour = (timestamp - DateUtils.DAY * day) / DateUtils.HOURS
+        val minute = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hour) / DateUtils.MINUTE
+        val second = (timestamp - DateUtils.DAY * day - DateUtils.HOURS * hour - DateUtils.MINUTE * minute) / DateUtils.SECOND
+
+        return when {
+            day > 0 -> String.format("$prefix%s天%s时%s分%s秒$postfix", day, hour, minute, second)
+            hour > 0 -> String.format("$prefix%s时%s分%s秒$postfix", hour, minute, second)
+            minute > 0 -> String.format("$prefix%s分%s秒$postfix", minute, second)
+            else -> String.format("$prefix%s秒$postfix", second)
+        }
+    }
 
     fun showDialog(title: String, leftTxt: String, rightTxt: String) {
         if (dialog == null) {

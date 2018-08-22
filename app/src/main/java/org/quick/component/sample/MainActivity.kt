@@ -11,8 +11,10 @@ import org.quick.component.*
 import org.quick.component.utils.ViewUtils
 import android.content.pm.PackageManager
 import android.content.*
+import android.util.Log
 import android.widget.Toast
 import org.quick.component.callback.OnClickListener2
+import org.quick.component.utils.DateUtils
 import org.quick.component.utils.DevicesUtils
 import org.quick.component.utils.ImageUtils
 
@@ -144,7 +146,12 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 //        startActivityForResult(intent, requestCode)
-
+        /*50毫秒*/
+        Log2.e(DateUtils.formatDateStopwatch(DateUtils.MILLISECOND * 50))
+        /*1天零2小时*/
+        Log2.e(DateUtils.formatDateStopwatch(DateUtils.DAY * 1 + DateUtils.HOURS * 2))
+        Log2.e(DateUtils.formatDateStopwatch(DateUtils.SECOND * 179 + DateUtils.MINUTE * 1 + DateUtils.MILLISECOND * 10))
+        Log2.e(DateUtils.formatDateStopwatch((DateUtils.SECOND * 1.5).toLong()))
     }
 
     //启用组件
