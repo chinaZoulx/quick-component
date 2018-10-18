@@ -53,10 +53,13 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         thread.start()
-        QuickASync.async({
+        QuickAsync.asyncDelay({
+
+        },100L)
+        QuickAsync.asyncLoop({steps ->
             //这里执行
-        }, 1000)
-        QuickDialog.Builder(this).setLayout(R.layout.dialog_test).build().viewHolder()
+        }, 1000L)
+        QuickDialog.Builder(this,R.layout.dialog_test).createViewHolder()
         Toast.makeText(this, "这是内容", Toast.LENGTH_SHORT).show()
 
         val toast = Toast(this)

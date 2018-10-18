@@ -51,7 +51,7 @@ class RvListActivity : Activity() {
 //        }, R.id.btn1, R.id.btn2, R.id.btn3)
 
         titleTv.setOnClickListener {
-            QuickASync.async(object : QuickASync.OnIntervalListener<Int> {
+            QuickAsync.asyncTime(object : QuickAsync.OnIntervalListener<Int> {
                 override fun onNext(value: Int) {
                     Log2.e(value.toString())
                     titleTv.text = "这是标题:$value"

@@ -1,18 +1,18 @@
 package org.quick.component.sample
 
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import kotlinx.android.synthetic.main.activity_main.*
 import org.quick.component.*
 import org.quick.component.utils.ViewUtils
 import android.content.pm.PackageManager
-import android.content.*
-import android.util.Log
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
 import org.quick.component.callback.OnClickListener2
 import org.quick.component.utils.DateUtils
 import org.quick.component.utils.DevicesUtils
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.sampleTv1 -> {//快速进度通知
                         QuickNotify.notifyTempProgress(1, R.mipmap.ic_launcher2, "这是标题", "这是内容")
-                        QuickASync.async(object : QuickASync.OnIntervalListener<Int> {
+                        QuickAsync.asyncTime(object : QuickAsync.OnIntervalListener<Int> {
                             override fun onNext(value: Int) {
                                 QuickNotify.notifyTempProgresses(1, R.mipmap.ic_launcher, "这是标题", "这是内容", value)
                             }
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                         }, 500, 100, false)
                     }
                     R.id.sampleTv2 -> {//快速异步线程
-                        QuickASync.async(object : QuickASync.OnASyncListener<String> {
+                        QuickAsync.async(object : QuickAsync.OnASyncListener<String> {
                             override fun onASync(): String {
                                 return if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
                             }
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                         })
                     }
                     R.id.sampleTv3 -> {//异步计时
-                        val test = QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
+                        val test = QuickAsync.asyncTime(object : QuickAsync.OnIntervalListener<Long> {
                             override fun onNext(value: Long) {
                                 sampleTv3.text = String.format("异步计时(%d)", value)
                             }
@@ -69,13 +69,13 @@ class MainActivity : AppCompatActivity() {
                             }
                         }, 1000, 10, checkbox.isChecked)
 
-                        QuickASync.async({
+                        QuickAsync.asyncDelay({
                             /*5秒后暂停*/
                             test.cancel(true)
                         }, 5000)
                     }
                     R.id.sampleTv4 -> {//快速弹框Dialog
-                        QuickDialog.Builder(this@MainActivity).setLayout(R.layout.dialog_test).show()
+                        QuickDialog.Builder(this@MainActivity,R.layout.dialog_test).show()
                                 .setText(R.id.leftTv, "取消", View.OnClickListener {
                                     QuickToast.showToastDefault("点击了取消")
                                     QuickDialog.dismiss()
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                         QuickBroadcast.sendBroadcast(intent, "testAction")
                     }
                     R.id.sampleTv6 -> {//快速适配器
-                        QuickStartActivity.startActivity(this@MainActivity, QuickStartActivity.Builder(this@MainActivity, RvListActivity::class.java).addParams("TITLE", "这是标题").build())
+                        QuickStartActivity.startActivity(QuickStartActivity.Builder(this@MainActivity, RvListActivity::class.java).addParams("TITLE", "这是标题"))
                     }
                     R.id.sampleTv7 -> {//快速存取本地数据
                         QuickSPHelper.putValue("A", "valueA").putValue("B", 1L).putValue("C", true)

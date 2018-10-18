@@ -92,11 +92,11 @@ class BaseViewHolder(itemView: View) : QuickViewHolder(itemView) {
     }
 }
 ~~~
-## QuickASync
+## QuickAsync
 快速常用的异步操作，包含了倒计时等操作<br>
 ### 异步示例
 ~~~java
-QuickASync.async(object : QuickASync.OnASyncListener<String> {
+QuickAsync.async(object : QuickAsync.OnASyncListener<String> {
                 override fun onASync(): String {
                 //在子线程中操作耗时操作，然后将结果返回到主线程中
                     return if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
@@ -112,7 +112,7 @@ QuickASync.async(object : QuickASync.OnASyncListener<String> {
 ~~~
 ### 计时10秒，每秒执行一次，1到10，示例
 ~~~java
-QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
+QuickAsync.async(object : QuickAsync.OnIntervalListener<Long> {
                 override fun onNext(value: Long) {
                     shareTv.text = String.format("测试异步(%d)", value)
                 }
@@ -126,7 +126,7 @@ QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
 ### 也可以翻转回来，做倒计时9到0，示例
 只需要多加一个参数即可
 ~~~java
-QuickASync.async(object : QuickASync.OnIntervalListener<Long> {
+QuickAsync.async(object : QuickAsync.OnIntervalListener<Long> {
                 override fun onNext(value: Long) {
                     shareTv.text = String.format("测试异步(%d)", value)
                 }
