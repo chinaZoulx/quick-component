@@ -1,5 +1,6 @@
 package org.quick.component.sample
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -119,14 +120,19 @@ class RvListActivity : Activity() {
             }
         }
 
-        override fun getItemViewType(position: Int): Int = when (position) {
-            123 -> {//展示书
-                1
+
+        override fun getItemViewType(position: Int): Int {
+            super.getItemViewType(position)
+            return when (position) {
+
+                123 -> {//展示书
+                    1
+                }
+                2, 4 -> {//展示作者
+                    2
+                }
+                else -> 1
             }
-            2,4 -> {//展示作者
-                2
-            }
-            else -> 1
         }
 
 

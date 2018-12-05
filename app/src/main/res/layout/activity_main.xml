@@ -1,143 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/sampleTv0"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速普通通知"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv1"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速进度通知"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv2"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速异步线程"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/sampleTv3"
-            android:layout_width="0dp"
+            android:id="@+id/sampleTv0"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="异步计时"
+            android:text="快速普通通知"
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="是否反转" />
+        <TextView
+            android:id="@+id/sampleTv1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速进度通知"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速异步线程"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sampleTv3"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="异步计时"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:text="是否反转" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sampleTv4"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速弹框Dialog"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv5"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速广播"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv6"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速适配器"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv7"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速存取本地数据"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv8"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速Toast"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv9"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速通知-桌面快捷方式"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv10"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="快速指纹"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv11"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="请求Http"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv12"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="下载文件"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv13"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="上传文件"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sampleTv14"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="解析Json"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/sampleTv15"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="请求网络2"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/sampleTv4"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速弹框Dialog"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv5"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速广播"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv6"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速适配器"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv7"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速存取本地数据"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv8"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速Toast"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv9"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速通知-桌面快捷方式"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/sampleTv10"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="快速指纹"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-</LinearLayout>
+</ScrollView>

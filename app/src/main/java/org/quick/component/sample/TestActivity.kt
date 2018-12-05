@@ -15,7 +15,11 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import org.quick.component.*
+import org.quick.component.http.HttpService
+import org.quick.component.http.callback.OnRequestListener
+import org.quick.component.sample.callback.TestBean
 import org.quick.component.utils.DateUtils
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -146,6 +150,36 @@ class TestActivity : AppCompatActivity() {
 
         formatDateDifference(date.time - date2.time, "还有：", "就可以采摘啦")
         DateUtils.formatDateStopwatch(DateUtils.MILLISECOND * 50)
+
+        HttpService.Builder("41r421r1r21r1r141r421r1r21r1r1").getWithJava(object : OnRequestListener<String>() {
+            override fun onFailure(e: IOException, isNetworkError: Boolean) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(value: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onEnd() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+
+        HttpService.Builder("41r421r1r21r1r141r421r1r21r1r1").get(object : OnRequestListener<TestBean>() {
+            override fun onFailure(e: IOException, isNetworkError: Boolean) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(value: TestBean?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onEnd() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
     }
 
     var dialog: Dialog? = null
