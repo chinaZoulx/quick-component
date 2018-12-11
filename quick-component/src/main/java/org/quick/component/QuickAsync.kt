@@ -86,7 +86,7 @@ object QuickAsync {
 
     interface OnASyncListener<T> : Consumer<T> {
         fun onASync(): T
-        fun onError(O_O: java.lang.Exception) {}
+        fun onError(O_O: Exception) {}
     }
 
     interface Consumer<T> {

@@ -15,8 +15,9 @@ class LoggingInterceptor : Interceptor {
 
         val response = chain.proceed(request)
 
+        Log2.d(" ")
         Log2.d("----Request-----")
-        Log2.d("----url    = " + request.url().toString())
+        Log2.d("----url        = " + request.url().toString())
 
         val resultStr = try {
             String(response.body()!!.bytes())
@@ -24,13 +25,16 @@ class LoggingInterceptor : Interceptor {
             "内存溢出"
         }
 
-        if (request.method() == "POST") Log2.d(String.format("----params = %s", parseRequest(request)))
+        if (request.method() == "POST")
+            Log2.d(String.format("----params     = %s", parseRequest(request)))
 
-        Log2.d("----result = $resultStr")
+        Log2.d(String.format("----result     = %s", resultStr))
+        Log2.d(String.format("----Response---- %d ms", DateUtils.getCurrentTimeInMillis() - startTime))
+        Log2.d(" ")
 
-        val endTime = DateUtils.getCurrentTimeInMillis() - startTime
-        Log2.d(String.format("----Response----%d ms", endTime))
-        return response.newBuilder().body(ResponseBody.create(HttpService.mediaTypeJson, resultStr)).build()
+        return response.newBuilder()
+                .body(ResponseBody.create(HttpService.mediaTypeJson, resultStr))
+                .build()
     }
 
     companion object {
@@ -46,7 +50,7 @@ class LoggingInterceptor : Interceptor {
                         val body = it.body()
                         params += when (body) {
                             is FormBody -> parseFormBody(body)
-                            else -> String.format(" { %s } ", it.headers()?.value(0))
+                            else -> String.format("{ %s } ", it.headers()?.value(0))
                         }
                     }
                 }

@@ -87,7 +87,7 @@ object FormatUtils {
 
         for (index in 0 until splitLength) tempSplitStr += "#"
 
-        tempPattern = tempSplitStr + splitChar + tempSplitStr.substring(0,splitLength-1) + "0." /*###,##0.*/
+        tempPattern = tempSplitStr + splitChar + tempSplitStr.substring(0, splitLength - 1) + "0." /*###,##0.*/
 
         for (index in 0 until endLength) tempPattern += "0" /*###,##0.00*/
 

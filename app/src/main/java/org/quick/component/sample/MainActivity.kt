@@ -180,8 +180,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.sampleTv13 -> {/*上传文件*/
                         HttpService.Builder("http://192.168.0.128:9008/openApi/acangKuDogSt.htm")
-                                .addParams("file", File(FileUtils.sdCardPath + File.separatorChar + "test.apk"))
-                                .addParams("file2", File(FileUtils.sdCardPath + File.separatorChar + "test.apk"))
+                                .addParams("file", File(FileUtils.sdCardPath + File.separatorChar + "weixin673android1360.apk"))
+                                .addParams("file2", File(FileUtils.sdCardPath + File.separatorChar + "weixin673android1360.apk"))
                                 .addParams("userName", "151*****066")
                                 .addParams("passWord", "888888")
                                 .uploadingWithJava(object : OnUploadingListener<TestBean>() {
@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() {
 
                                     override fun onLoading(key: String, bytesRead: Long, totalCount: Long, isDone: Boolean) {
                                         sampleTv13.text = String.format("上传文件[%s]：%d/%d", key, bytesRead, totalCount)
-                                        Log2.d(String.format("正在上传[%s]：%s/%s", key, bytesRead.toString(), totalCount.toString()))
+//                                        Log2.d(String.format("正在上传[%s]：%s/%s", key, bytesRead.toString(), totalCount.toString()))
 
                                         if ("file" == key && isDone) Log2.e("file上传完成")
                                         else if ("file2" == key && isDone) Log2.e("file2上传完成")
@@ -208,6 +208,7 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     override fun onEnd() {
+                                        Log2.e("上传结束")
                                         super.onEnd()
                                     }
 

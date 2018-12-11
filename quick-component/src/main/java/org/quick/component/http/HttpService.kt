@@ -10,7 +10,8 @@ import org.quick.component.http.callback.OnProgressListener
 import org.quick.component.http.callback.OnRequestListener
 import org.quick.component.http.callback.OnUploadingListener
 import org.quick.component.http.interceptor.LoggingInterceptor
-import org.quick.component.http.interceptor.ProgressInterceptor
+import org.quick.component.http.interceptor.DownloadInterceptor
+import org.quick.component.http.interceptor.UploadingInterceptor
 import org.quick.component.utils.FileUtils
 import org.quick.component.utils.GsonUtils
 import org.quick.component.utils.HttpUtils
@@ -59,12 +60,22 @@ object HttpService {
                 .build()
     }
 
-    val progressClient by lazy {
+    val downloadClient by lazy {
         return@lazy OkHttpClient.Builder()
                 .connectTimeout(config.connectTimeout, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(config.isRetryConnection)
                 .followRedirects(true)
                 .cookieJar(localCookieJar)
+    }
+
+    val uploadingClient by lazy {
+        return@lazy OkHttpClient.Builder()
+                .connectTimeout(config.connectTimeout, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(config.isRetryConnection)
+                .followRedirects(true)
+                .cookieJar(localCookieJar)
+                .addInterceptor(UploadingInterceptor())
+                .build()
     }
 
     /**
@@ -88,7 +99,7 @@ object HttpService {
     private fun downloadBreakpoint(builder: Builder, onProgressListener: OnProgressListener) {
         onProgressListener.onStart()
         if (builder.downloadEndIndex == 0L)/*没有指定下载结束*/
-            progressClient.build().newCall(postRequest(builder).build()).enqueue(object : Callback {
+            downloadClient.build().newCall(postRequest(builder).build()).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onProgressListener.onFailure(e, e.javaClass == ConnectException::class.java)
                     onProgressListener.onEnd()
@@ -214,7 +225,7 @@ object HttpService {
      */
     fun checkOOM(response: Response): String {
         return try {
-            String(response.body()!!.bytes())
+            response.body()!!.string()
         } catch (O_O: OutOfMemoryError) {/*服务器返回数据太大，会造成OOM，比如返回APK，高清图片*/
             "内存溢出\n" + O_O.message
         }
@@ -354,7 +365,7 @@ object HttpService {
         val request = Request.Builder().url(builder.url).tag(builder.tag).post(multipartBody.build()).build()
 
         onUploadingListener.onStart()
-        getCall(progressClient.build(), request).enqueue(object : Callback {
+        getCall(uploadingClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
                 onUploadingListener.onFailure(e, e.javaClass == ConnectException::class.java)
@@ -391,7 +402,7 @@ object HttpService {
         val request = Request.Builder().url(builder.url).tag(builder.tag).post(multipartBody.build()).build()
 
         onUploadingListener.onStart()
-        getCall(progressClient.build(), request).enqueue(object : Callback {
+        getCall(uploadingClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
                 onUploadingListener.onFailure(e, e.javaClass == ConnectException::class.java)
@@ -417,7 +428,7 @@ object HttpService {
         val request = getRequest(builder).build()
 
         onProgressListener.onStart()
-        getCall(progressClient.addNetworkInterceptor(ProgressInterceptor(builder, onProgressListener)).build(), request)
+        getCall(downloadClient.addNetworkInterceptor(DownloadInterceptor(builder, onProgressListener)).build(), request)
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         removeTask(call.request())
@@ -452,7 +463,7 @@ object HttpService {
         if (!builder.isDownloadBreakpoint)/*非断点，未调用onStart方法*/
             onProgressListener.onStart()
         val request = postRequest(builder).build()
-        getCall(progressClient.addNetworkInterceptor(ProgressInterceptor(builder, onProgressListener)).build(), request)
+        getCall(downloadClient.addNetworkInterceptor(DownloadInterceptor(builder, onProgressListener)).build(), request)
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         removeTask(call.request())
@@ -461,7 +472,7 @@ object HttpService {
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        FileUtils.writeFile(response.body()?.byteStream(), config.cachePath, HttpUtils.getFileName(builder.url), builder.downloadStartIndex != 0L, object : OnWriteListener {
+                        FileUtils.writeFile(response.body()?.byteStream(), config.cachePath, HttpUtils.getFileName(builder.url), builder.isDownloadBreakpoint, object : OnWriteListener {
                             override fun onLoading(key: String, bytesRead: Long, totalCount: Long, isDone: Boolean) = Unit
 
                             override fun onResponse(file: File) {
@@ -513,7 +524,7 @@ object HttpService {
          * 添加参数
          */
         fun addParams(bundle: Bundle): Builder {
-            bundle.keySet().forEach { requestBodyBundle.putString(it, bundle.get(it).toString()) }
+            requestBodyBundle.putAll(bundle)
             return this
         }
 
