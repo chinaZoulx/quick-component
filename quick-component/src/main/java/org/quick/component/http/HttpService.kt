@@ -1,6 +1,8 @@
 package org.quick.component.http
 
+import android.app.Activity
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.text.TextUtils
 import android.util.SparseArray
 import okhttp3.*
@@ -15,6 +17,7 @@ import org.quick.component.http.interceptor.UploadingInterceptor
 import org.quick.component.utils.FileUtils
 import org.quick.component.utils.GsonUtils
 import org.quick.component.utils.HttpUtils
+import org.quick.component.utils.check.CheckUtils
 import java.io.File
 import java.io.IOException
 import java.net.ConnectException
@@ -239,6 +242,15 @@ object HttpService {
     }
 
     /**
+     * 绑定者是否生存
+     */
+    fun checkBinderIsExist(builder: Builder): Boolean = when {
+        builder.activity != null -> CheckUtils.checkActivityIsRunning(builder.activity)
+        builder.fragment != null -> !builder.fragment!!.isDetached
+        else -> true
+    }
+
+    /**
      * kotlin专用内联函数
      * 返回值json使用GSON解析，若 T = String 则不进行解析
      */
@@ -249,17 +261,21 @@ object HttpService {
         getCall(normalClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
-                onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                    onRequestListener.onEnd()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 removeTask(call.request())
                 val data = checkOOM(response)
-                QuickAsync.runOnUiThread {
-                    if (T::class.java == String::class.java) onRequestListener.onResponse(data as T)
-                    else onRequestListener.onResponse(GsonUtils.parseFromJson(data))
-                    onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    QuickAsync.runOnUiThread {
+                        if (T::class.java == String::class.java) onRequestListener.onResponse(data as T)
+                        else onRequestListener.onResponse(GsonUtils.parseFromJson(data))
+                        onRequestListener.onEnd()
+                    }
                 }
             }
         })
@@ -276,17 +292,21 @@ object HttpService {
         getCall(normalClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
-                onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                    onRequestListener.onEnd()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 removeTask(call.request())
                 val data = checkOOM(response)
-                QuickAsync.runOnUiThread {
-                    if (T::class.java == String::class.java) onRequestListener.onResponse(data as T)
-                    else onRequestListener.onResponse(GsonUtils.parseFromJson(data))
-                    onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    QuickAsync.runOnUiThread {
+                        if (T::class.java == String::class.java) onRequestListener.onResponse(data as T)
+                        else onRequestListener.onResponse(GsonUtils.parseFromJson(data))
+                        onRequestListener.onEnd()
+                    }
                 }
             }
         })
@@ -303,17 +323,21 @@ object HttpService {
         getCall(normalClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
-                onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                    onRequestListener.onEnd()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 removeTask(call.request())
                 val data = checkOOM(response)
-                QuickAsync.runOnUiThread {
-                    if (onRequestListener.tClass == String::class.java) onRequestListener.onResponse(data as T)
-                    else onRequestListener.onResponse(GsonUtils.parseFromJson(data, onRequestListener.tClass))
-                    onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    QuickAsync.runOnUiThread {
+                        if (onRequestListener.tClass == String::class.java) onRequestListener.onResponse(data as T)
+                        else onRequestListener.onResponse(GsonUtils.parseFromJson(data, onRequestListener.tClass))
+                        onRequestListener.onEnd()
+                    }
                 }
             }
         })
@@ -331,17 +355,21 @@ object HttpService {
         getCall(normalClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
-                onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    onRequestListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                    onRequestListener.onEnd()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 removeTask(call.request())
                 val data = checkOOM(response)
-                QuickAsync.runOnUiThread {
-                    if (onRequestListener.tClass == String::class.java) onRequestListener.onResponse(data as T)
-                    else onRequestListener.onResponse(GsonUtils.parseFromJson(data, onRequestListener.tClass))
-                    onRequestListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    QuickAsync.runOnUiThread {
+                        if (onRequestListener.tClass == String::class.java) onRequestListener.onResponse(data as T)
+                        else onRequestListener.onResponse(GsonUtils.parseFromJson(data, onRequestListener.tClass))
+                        onRequestListener.onEnd()
+                    }
                 }
             }
         })
@@ -368,17 +396,21 @@ object HttpService {
         getCall(uploadingClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
-                onUploadingListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                onUploadingListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    onUploadingListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                    onUploadingListener.onEnd()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 removeTask(call.request())
                 val data = checkOOM(response)
-                QuickAsync.runOnUiThread {
-                    if (T::class.java == String::class.java) onUploadingListener.onResponse(data as T)
-                    else onUploadingListener.onResponse(GsonUtils.parseFromJson(data))
-                    onUploadingListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    QuickAsync.runOnUiThread {
+                        if (T::class.java == String::class.java) onUploadingListener.onResponse(data as T)
+                        else onUploadingListener.onResponse(GsonUtils.parseFromJson(data))
+                        onUploadingListener.onEnd()
+                    }
                 }
             }
         })
@@ -405,17 +437,21 @@ object HttpService {
         getCall(uploadingClient, request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 removeTask(call.request())
-                onUploadingListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                onUploadingListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    onUploadingListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                    onUploadingListener.onEnd()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 removeTask(call.request())
                 val data = checkOOM(response)
-                QuickAsync.runOnUiThread {
-                    if (onUploadingListener.tClass == String::class.java) onUploadingListener.onResponse(data as T)
-                    else onUploadingListener.onResponse(GsonUtils.parseFromJson(data, onUploadingListener.tClass))
-                    onUploadingListener.onEnd()
+                if (checkBinderIsExist(builder)) {
+                    QuickAsync.runOnUiThread {
+                        if (onUploadingListener.tClass == String::class.java) onUploadingListener.onResponse(data as T)
+                        else onUploadingListener.onResponse(GsonUtils.parseFromJson(data, onUploadingListener.tClass))
+                        onUploadingListener.onEnd()
+                    }
                 }
             }
         })
@@ -432,26 +468,33 @@ object HttpService {
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         removeTask(call.request())
-                        onProgressListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                        onProgressListener.onEnd()
+                        if (checkBinderIsExist(builder)) {
+                            onProgressListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                            onProgressListener.onEnd()
+                        }
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        FileUtils.writeFile(response.body()?.byteStream(), config.cachePath, HttpUtils.getFileName(builder.url), true, object : OnWriteListener {
-                            override fun onLoading(key: String, bytesRead: Long, totalCount: Long, isDone: Boolean) = Unit
+                        if (checkBinderIsExist(builder))
+                            FileUtils.writeFile(response.body()?.byteStream(), config.cachePath, HttpUtils.getFileName(builder.url), true, object : OnWriteListener {
+                                override fun onLoading(key: String, bytesRead: Long, totalCount: Long, isDone: Boolean) = Unit
 
-                            override fun onResponse(file: File) {
-                                removeTask(call.request())
-                                onProgressListener.onResponse(file)
-                                onProgressListener.onEnd()
-                            }
+                                override fun onResponse(file: File) {
+                                    removeTask(call.request())
+                                    if (checkBinderIsExist(builder)) {
+                                        onProgressListener.onResponse(file)
+                                        onProgressListener.onEnd()
+                                    }
+                                }
 
-                            override fun onFailure(O_O: IOException) {
-                                removeTask(call.request())
-                                onProgressListener.onFailure(O_O, false)
-                                onProgressListener.onEnd()
-                            }
-                        })
+                                override fun onFailure(O_O: IOException) {
+                                    removeTask(call.request())
+                                    if (checkBinderIsExist(builder)) {
+                                        onProgressListener.onFailure(O_O, false)
+                                        onProgressListener.onEnd()
+                                    }
+                                }
+                            })
                     }
                 })
     }
@@ -467,24 +510,31 @@ object HttpService {
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         removeTask(call.request())
-                        onProgressListener.onFailure(e, e.javaClass == ConnectException::class.java)
-                        onProgressListener.onEnd()
+                        if (checkBinderIsExist(builder)) {
+                            onProgressListener.onFailure(e, e.javaClass == ConnectException::class.java)
+                            onProgressListener.onEnd()
+                        }
                     }
 
                     override fun onResponse(call: Call, response: Response) {
+                        if (checkBinderIsExist(builder))
                         FileUtils.writeFile(response.body()?.byteStream(), config.cachePath, HttpUtils.getFileName(builder.url), builder.isDownloadBreakpoint, object : OnWriteListener {
                             override fun onLoading(key: String, bytesRead: Long, totalCount: Long, isDone: Boolean) = Unit
 
                             override fun onResponse(file: File) {
                                 removeTask(call.request())
-                                onProgressListener.onResponse(file)
-                                onProgressListener.onEnd()
+                                if (checkBinderIsExist(builder)) {
+                                    onProgressListener.onResponse(file)
+                                    onProgressListener.onEnd()
+                                }
                             }
 
                             override fun onFailure(O_O: IOException) {
                                 removeTask(call.request())
-                                onProgressListener.onFailure(O_O, false)
-                                onProgressListener.onEnd()
+                                if (checkBinderIsExist(builder)) {
+                                    onProgressListener.onFailure(O_O, false)
+                                    onProgressListener.onEnd()
+                                }
                             }
                         })
                     }
@@ -499,10 +549,29 @@ object HttpService {
         val fileBundle = Bundle()
         val header = Bundle()
         var tag: String? = null
+
         var downloadStartIndex = 0L
         var downloadEndIndex = 0L
-        /*是否断点下载*/
-        var isDownloadBreakpoint = false
+        var isDownloadBreakpoint = false/*是否断点下载*/
+
+        var fragment: Fragment? = null
+        var activity: Activity? = null
+
+        /**
+         * 与fragment生命周期绑定，若fragment销毁或分离，请求将不会返回
+         */
+        fun binder(fragment: Fragment?): Builder {
+            this.fragment = fragment
+            return this
+        }
+
+        /**
+         * 与activity生命周期绑定，若activity销毁，请求将不会返回
+         */
+        fun binder(activity: Activity?): Builder {
+            this.activity = activity
+            return this
+        }
 
         /**
          * 添加标识，可用于取消任务
@@ -606,14 +675,6 @@ object HttpService {
         }
 
         /**
-         * * kotlin 专用内联函数
-         * 上传文件
-         */
-        inline fun <reified T> uploading(onUploadingListener: OnUploadingListener<T>) {
-            HttpService.uploadingWithKotlin(this, onUploadingListener)
-        }
-
-        /**
          * 兼容JAVA
          * get请求数据
          */
@@ -630,27 +691,20 @@ object HttpService {
         }
 
         /**
+         * * kotlin 专用内联函数
+         * 上传文件
+         */
+        inline fun <reified T> uploading(onUploadingListener: OnUploadingListener<T>) {
+            HttpService.uploadingWithKotlin(this, onUploadingListener)
+        }
+
+        /**
          * 兼容JAVA
          * 上传文件
          */
         fun <T> uploadingWithJava(onUploadingListener: OnUploadingListener<T>) {
             HttpService.uploadingWithJava(this, onUploadingListener)
         }
-//
-//        /**
-//         * 以GET方式，下载文件
-//         */
-//        fun downloadGet(onProgressListener: OnProgressListener) {
-//            HttpService.downloadGet(this, onProgressListener)
-//        }
-
-//        /**
-//         * 以POST方式，下载文件
-//         */
-//        fun downloadPost(onProgressListener: OnProgressListener) {
-//            HttpService.downloadPost(this, onProgressListener)
-//        }
-
         /**
          * 下载文件，可协带参数
          */

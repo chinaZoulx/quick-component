@@ -59,11 +59,13 @@ class TestActivity : AppCompatActivity() {
         thread.start()
         QuickAsync.asyncDelay({
 
-        },100L)
-        QuickAsync.asyncLoop({steps ->
+        }, 100L)
+
+        val task = QuickAsync.asyncLoop({ steps ->
             //这里执行
         }, 1000L)
-        QuickDialog.Builder(this,R.layout.dialog_test).createViewHolder()
+        task.cancel(true)
+        QuickDialog.Builder(this, R.layout.dialog_test).createViewHolder()
         Toast.makeText(this, "这是内容", Toast.LENGTH_SHORT).show()
 
         val toast = Toast(this)
@@ -150,36 +152,6 @@ class TestActivity : AppCompatActivity() {
 
         formatDateDifference(date.time - date2.time, "还有：", "就可以采摘啦")
         DateUtils.formatDateStopwatch(DateUtils.MILLISECOND * 50)
-
-        HttpService.Builder("41r421r1r21r1r141r421r1r21r1r1").getWithJava(object : OnRequestListener<String>() {
-            override fun onFailure(e: IOException, isNetworkError: Boolean) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(value: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onEnd() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-        })
-
-        HttpService.Builder("41r421r1r21r1r141r421r1r21r1r1").get(object : OnRequestListener<TestBean>() {
-            override fun onFailure(e: IOException, isNetworkError: Boolean) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(value: TestBean?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onEnd() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-        })
     }
 
     var dialog: Dialog? = null

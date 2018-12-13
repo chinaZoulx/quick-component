@@ -77,7 +77,7 @@ open class QRecyclerView : SwipeRefreshLayout {
 
     private fun setupListener() {
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, state: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, state: Int) {
                 checkIsLoading()
             }
         })
@@ -116,27 +116,28 @@ open class QRecyclerView : SwipeRefreshLayout {
         mOnRefreshListener == null -> false/*没有监听*/
         isLoading -> false/*正在加载*/
         isRefreshing -> false/*正在刷新*/
-        mRecyclerView.layoutManager.childCount < 0 -> false/*没有数据*/
+        mRecyclerView.layoutManager!!.childCount < 0 -> false/*没有数据*/
         else -> true
     }
 
     private fun checkIsLoading() {
         if (tryLoading()) {
             val layoutManager = mRecyclerView.layoutManager
-
-            val lastVisibleItemPosition = when (layoutManager) {
-                is GridLayoutManager -> layoutManager.findLastVisibleItemPosition()
-                is LinearLayoutManager -> layoutManager.findLastVisibleItemPosition()
-                is StaggeredGridLayoutManager -> {
-                    val into = IntArray(layoutManager.spanCount)
-                    layoutManager.findLastVisibleItemPositions(into)
-                    if (into.isNotEmpty()) into.max()!! else 0
+            if (layoutManager != null) {
+                val lastVisibleItemPosition = when (layoutManager) {
+                    is GridLayoutManager -> layoutManager.findLastVisibleItemPosition()
+                    is LinearLayoutManager -> layoutManager.findLastVisibleItemPosition()
+                    is StaggeredGridLayoutManager -> {
+                        val into = IntArray(layoutManager.spanCount)
+                        layoutManager.findLastVisibleItemPositions(into)
+                        if (into.isNotEmpty()) into.max()!! else 0
+                    }
+                    else -> 0
                 }
-                else -> 0
-            }
 
-            if (lastVisibleItemPosition >= layoutManager.itemCount - 1 && layoutManager.itemCount >= layoutManager.childCount)
-                startLoadMore()
+                if (lastVisibleItemPosition >= layoutManager.itemCount - 1 && layoutManager.itemCount >= layoutManager.childCount)
+                    startLoadMore()
+            }
         }
     }
 
@@ -377,23 +378,18 @@ open class QRecyclerView : SwipeRefreshLayout {
         /**
          * 获取分割线的尺寸，也就是每个Item偏移多少
          */
-        override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-            if (parent != null) {
-
-                if (parent.layoutManager.canScrollVertically()) {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                if (parent.layoutManager!!.canScrollVertically()) {
 //                    when{
 //                        parent.layoutManager is GridLayoutManager->(parent.layoutManager as StaggeredGridLayoutManager).spanCount
 //                    }
-                    outRect?.set(0, 0, 0, if (drawable.intrinsicHeight != -1) drawable.intrinsicHeight else defaultSize)
-                } else outRect?.set(0, 0, if (drawable.intrinsicWidth != -1) drawable.intrinsicWidth else defaultSize, 0)
-            } else super.getItemOffsets(outRect, view, parent, state)
+                    outRect.set(0, 0, 0, if (drawable.intrinsicHeight != -1) drawable.intrinsicHeight else defaultSize)
+                } else outRect.set(0, 0, if (drawable.intrinsicWidth != -1) drawable.intrinsicWidth else defaultSize, 0)
         }
 
-        override fun onDraw(c: Canvas?, parent: RecyclerView?, state: RecyclerView.State?) {
-            if (parent != null && c != null) {
-                if (parent.layoutManager.canScrollVertically()) drawableVertically(c, parent)
+        override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                if (parent.layoutManager!!.canScrollVertically()) drawableVertically(c, parent)
                 else drawableHorizontally(c, parent)
-            }
         }
 
         /**
@@ -403,7 +399,7 @@ open class QRecyclerView : SwipeRefreshLayout {
             c.save()
             for (index in 0 until parent.childCount) {
                 val realIndex = parent.getChildAdapterPosition(parent.getChildAt(index))
-                if (realIndex in if (isReverseLayout(parent.layoutManager)) 1 until parent.adapter.itemCount else 0 until parent.adapter.itemCount - 1) {
+                if (realIndex in if (isReverseLayout(parent.layoutManager!!)) 1 until parent.adapter!!.itemCount else 0 until parent.adapter!!.itemCount - 1) {
                     val bound = Rect()
                     parent.getDecoratedBoundsWithMargins(parent.getChildAt(index), bound)
                     val left: Int = if (padding == -1f) parent.getChildAt(index).left else Math.round(parent.left + padding)
@@ -424,7 +420,7 @@ open class QRecyclerView : SwipeRefreshLayout {
             c.save()
             for (index in 0 until parent.childCount) {
                 val realIndex = parent.getChildAdapterPosition(parent.getChildAt(index))
-                if (realIndex in if (isReverseLayout(parent.layoutManager)) 1 until parent.adapter.itemCount else 0 until parent.adapter.itemCount - 1) {
+                if (realIndex in if (isReverseLayout(parent.layoutManager!!)) 1 until parent.adapter!!.itemCount else 0 until parent.adapter!!.itemCount - 1) {
                     val bound = Rect()
                     parent.getDecoratedBoundsWithMargins(parent.getChildAt(index), bound)
                     val left: Int = bound.right - if (drawable.intrinsicWidth != -1) drawable.intrinsicWidth else defaultSize

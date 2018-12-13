@@ -37,6 +37,7 @@ object QuickAsync {
      * 秒表计步，for example:60秒（1....60）
      * @param interval 间隔时间，单位：毫秒
      * @param maxSteps 最大步数
+     * @param isReversal 是否反转 （59....0）
      */
     fun <T> asyncTime(onIntervalListener: OnIntervalListener<T>, interval: Long, maxSteps: Long, isReversal: Boolean = false) = executorService.submit {
         var steps = if (isReversal) maxSteps else 0
@@ -78,7 +79,6 @@ object QuickAsync {
             Thread.sleep(interval)
         }
     }
-
 
     interface OnIntervalListener<T> : Consumer<T> {
         fun onNext(value: T)

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_rv_list.*
 import org.quick.component.*
+import org.quick.component.sample.test.TestFragmentActivity
 
 class RvListActivity : Activity() {
 
@@ -37,7 +38,7 @@ class RvListActivity : Activity() {
 //        adapter.removeAll()
 
         adapter.setOnItemClickListener { view, viewHolder, position, itemData ->
-
+            QuickActivity.Builder(this,TestFragmentActivity::class.java).startActivity()
         }
         adapter.setOnItemLongClickListener { view, viewHolder, position, itemData ->
 

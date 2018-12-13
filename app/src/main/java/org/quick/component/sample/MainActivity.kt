@@ -18,9 +18,7 @@ import org.quick.component.http.callback.OnProgressListener
 import org.quick.component.http.callback.OnRequestListener
 import org.quick.component.http.callback.OnUploadingListener
 import org.quick.component.sample.callback.TestBean2
-import org.quick.component.http.callback.ClassCallback
 import org.quick.component.sample.callback.TestBean
-import org.quick.component.sample.callback.TestBean3
 import org.quick.component.utils.*
 import java.io.File
 import java.io.IOException
@@ -60,6 +58,10 @@ class MainActivity : AppCompatActivity() {
                                 return if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
                             }
 
+                            override fun onError(O_O: Exception) {
+                                super.onError(O_O)
+                            }
+
                             override fun onAccept(value: String) {
                                 Log2.e("onASync:$value")
                                 val temp = if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程"
@@ -82,6 +84,9 @@ class MainActivity : AppCompatActivity() {
                             /*5秒后暂停*/
                             test.cancel(true)
                         }, 5000)
+                        QuickAsync.runOnUiThread {
+
+                        }
                     }
                     R.id.sampleTv4 -> {//快速弹框Dialog
                         QuickDialog.Builder(this@MainActivity, R.layout.dialog_test).show()
@@ -98,7 +103,20 @@ class MainActivity : AppCompatActivity() {
                         QuickBroadcast.sendBroadcast(intent, "testAction")
                     }
                     R.id.sampleTv6 -> {//快速适配器
-                        QuickStartActivity.startActivity(QuickStartActivity.Builder(this@MainActivity, RvListActivity::class.java).addParams("TITLE", "这是标题"))
+                        QuickActivity.Builder(this@MainActivity, RvListActivity::class.java)
+                                .addParams("TITLE", "这是标题")
+                                .startActivity { resultCode, data ->
+
+                                }
+
+                        val intent = Intent()
+                        intent.putExtra("TITLE", "这是标题")
+                        val bundle = Bundle()
+                        bundle.putString("TITLE", "dfdfdf")
+                        QuickActivity.Builder(this@MainActivity, RvListActivity::class.java)
+                                .addParams(intent)
+                                .addParams(bundle)
+                                .startActivity()
                     }
                     R.id.sampleTv7 -> {//快速存取本地数据
                         QuickSPHelper.putValue("A", "valueA").putValue("B", 1L).putValue("C", true)
@@ -132,10 +150,11 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.sampleTv11 -> {//请求网络
                         HttpService.Builder("https://hptree.com.cn/external/login.htm")//http://192.168.0.128:9008/
+                                .binder(this@MainActivity)
                                 .addParams("userName", "15102309066")
                                 .addParams("passWord", "888888")
                                 .getWithJava(object : OnRequestListener<TestBean>() {
-                                    override fun onFailure(e: IOException, isNetworkError: Boolean) {
+                                    override fun onFailure(e: Exception, isNetworkError: Boolean) {
                                         e.printStackTrace()
                                         if (isNetworkError)
                                             Log2.e("网络错误")
@@ -160,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                                         Log2.e("onStart")
                                     }
 
-                                    override fun onFailure(e: IOException, isNetworkError: Boolean) {
+                                    override fun onFailure(e: Exception, isNetworkError: Boolean) {
                                         Log2.e("onFailure")
                                     }
 
@@ -203,8 +222,9 @@ class MainActivity : AppCompatActivity() {
                                         Log2.e(value)
                                     }
 
-                                    override fun onFailure(e: IOException, isNetworkError: Boolean) {
+                                    override fun onFailure(e: Exception, isNetworkError: Boolean) {
                                         Log2.e("上传错误")
+                                        e.printStackTrace()
                                     }
 
                                     override fun onEnd() {
@@ -225,7 +245,7 @@ class MainActivity : AppCompatActivity() {
                                 .addParams("userName", "15102309066")
                                 .addParams("passWord", "888888")
                                 .post(object : OnRequestListener<TestBean2<Int, String>>() {
-                                    override fun onFailure(e: IOException, isNetworkError: Boolean) {
+                                    override fun onFailure(e: Exception, isNetworkError: Boolean) {
                                         e.printStackTrace()
                                         if (isNetworkError)
                                             Log2.e("网络错误")
@@ -279,6 +299,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        QuickStartActivity.onActivityResult(requestCode, resultCode, data)
+        QuickActivity.onActivityResult(requestCode, resultCode, data)
     }
 }

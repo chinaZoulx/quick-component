@@ -1,14 +1,10 @@
 package org.quick.component.sample;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quick.component.http.HttpService;
 import org.quick.component.http.callback.OnRequestListener;
-
-import java.io.IOException;
 
 public class Test2Activity {
 
@@ -21,7 +17,7 @@ public class Test2Activity {
             }
 
             @Override
-            public void onFailure(@NotNull IOException e, boolean isNetworkError) {
+            public void onFailure(@NotNull Exception e, boolean isNetworkError) {
 
             }
 
@@ -55,16 +51,5 @@ public class Test2Activity {
 //        return null;
 //    }
 
-    public static <T> T parseFromJson(String json) {
-
-        try {
-            TypeToken typeToken = new TypeToken<T>() {
-            };
-            return (T) new Gson().fromJson(json, typeToken.getType());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
 
 }
