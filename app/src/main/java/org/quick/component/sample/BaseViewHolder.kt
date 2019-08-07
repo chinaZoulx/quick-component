@@ -3,7 +3,6 @@ package org.quick.component.sample
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
-import org.quick.component.QuickViewHolder
 
 class BaseViewHolder(itemView: View) : QuickViewHolder(itemView) {
 

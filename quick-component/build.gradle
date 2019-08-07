@@ -44,6 +44,13 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+
+    implementation 'com.github.SpringSmell:QuickHttp:1.0.0'
+    implementation 'com.github.SpringSmell:QuickDialog:1.0.0'
+    implementation 'com.github.SpringSmell:QuickAdapter:1.0.0'
+    implementation 'com.github.SpringSmell:QuickViewHolder:1.0.0'
+
+//    implementation project(path: ':quickviewholder')
 }
 
-apply from : 'publish2.gradle'
+//apply from : 'publish2.gradle'

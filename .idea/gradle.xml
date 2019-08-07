@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/quick-component" />
+            <option value="$PROJECT_DIR$/quickviewholder" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

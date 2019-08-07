@@ -1,1 +1,1 @@
-include ':app', ':quick-component'
+include ':app', ':quick-component', ':quickviewholder'

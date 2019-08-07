@@ -1,6 +1,7 @@
 package org.quick.component
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.annotation.CallSuper
 import android.support.annotation.Size
 import android.support.v7.widget.GridLayoutManager
@@ -10,10 +11,9 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import android.widget.Gallery
+import android.widget.*
 import org.quick.component.utils.ViewUtils
-import kotlin.math.min
+
 
 /**
  * Created by chris Zou on 2016/6/12.
@@ -386,4 +386,61 @@ abstract class QuickAdapter<M, H : QuickViewHolder> : RecyclerView.Adapter<H>() 
         super.onViewAttachedToWindow(holder)
         if (parent?.layoutManager is StaggeredGridLayoutManager && (isHeaderView(holder.itemView) || isFooterView(holder.itemView))) (holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
     }
+
+//    open class ViewHolder(itemView: View, private var vh: QuickVH = QuickVH(itemView)) : RecyclerView.ViewHolder(itemView), QuickVHService {
+//        override fun <T : View> getView(id: Int): T? = vh.getView<T>(id)
+//
+//        override fun setText(id: Int, content: CharSequence?, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setText(id, content, onClickListener)
+//
+//        override fun setImg(id: Int, iconId: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setImg(id, iconId, onClickListener)
+//
+//        override fun setImg(id: Int, url: CharSequence, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setImg(id, url, onClickListener)
+//
+//        override fun setImgRoundRect(id: Int, radius: Float, iconId: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setImgRoundRect(id, radius, iconId, onClickListener)
+//
+//        override fun setImgRoundRect(id: Int, radius: Float, url: CharSequence, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setImgRoundRect(id, radius, url, onClickListener)
+//
+//        override fun setImgCircle(id: Int, url: CharSequence, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setImgCircle(id, url, onClickListener)
+//
+//        override fun setImgCircle(id: Int, imgRes: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService = vh.setImgCircle(id, imgRes, onClickListener)
+//
+//        override fun bindImgCircle(context: Context, url: String, imageView: ImageView?): QuickVHService = vh.bindImgCircle(context, url, imageView)
+//
+//        override fun bindImg(context: Context, url: String, imageView: ImageView?): QuickVHService = vh.bindImg(context, url, imageView)
+//
+//        override fun bindImgRoundRect(context: Context, url: String, radius: Float, imageView: ImageView?): QuickVHService = vh.bindImgRoundRect(context, url, radius, imageView)
+//
+//        override fun setOnClickListener(onClickListener: (view: View, VHService: QuickVHService) -> Unit, vararg ids: Int): QuickVHService = vh.setOnClickListener(onClickListener,*ids)
+//
+//        override fun setOnClickListener(onClickListener: (view: View, VHService: QuickVHService) -> Unit, id: Int): QuickVHService = vh.setOnClickListener(onClickListener, id)
+//
+//        override fun setProgress(id: Int, value: Int): QuickVHService = vh.setProgress(id, value)
+//
+//        override fun setCheck(id: Int, isChecked: Boolean): QuickVHService = vh.setCheck(id, isChecked)
+//
+//        override fun setBackgroundResource(id: Int, bgResId: Int): QuickVHService = vh.setBackgroundResource(id, bgResId)
+//
+//        override fun setBackground(id: Int, background: Drawable): QuickVHService = vh.setBackground(id, background)
+//
+//        override fun setBackgroundColor(id: Int, background: Int): QuickVHService = vh.setBackgroundColor(id, background)
+//
+//        override fun setVisibility(visibility: Int, vararg resIds: Int): QuickVHService = vh.setVisibility(visibility, *resIds)
+//
+//        override fun getTextView(id: Int): TextView? = vh.getTextView(id)
+//
+//        override fun getButton(id: Int): Button? = vh.getButton(id)
+//
+//        override fun getImageView(id: Int): ImageView? = vh.getImageView(id)
+//
+//        override fun getLinearLayout(id: Int): LinearLayout? = vh.getLinearLayout(id)
+//
+//        override fun getRelativeLayout(id: Int): RelativeLayout? = vh.getRelativeLayout(id)
+//
+//        override fun getFramLayout(id: Int): FrameLayout? = vh.getFramLayout(id)
+//
+//        override fun getCheckBox(id: Int): CheckBox? = vh.getCheckBox(id)
+//
+//        override fun getEditText(id: Int): EditText? = vh.getEditText(id)
+//
+//    }
 }

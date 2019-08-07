@@ -23,7 +23,7 @@ object QuickActivity {
         if (onActivityResultListener == null)
             builder.activity?.startActivity(builder.build())
         else if (builder.build().component != null) {
-            val requestCode = createRequestCode(builder.build().component.className)
+            val requestCode = createRequestCode(builder.build().component!!.className)
             requestParamsList.put(requestCode, onActivityResultListener)/*这里是以目的地存储的*/
             builder.activity?.startActivityForResult(builder.build(), requestCode)
         }
@@ -164,6 +164,7 @@ object QuickActivity {
         if (value == null) {
             value = defaultValue
         }
+        @Suppress("UNCHECKED_CAST")
         return value as T
     }
 }

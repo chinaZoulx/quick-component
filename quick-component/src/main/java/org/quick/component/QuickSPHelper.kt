@@ -2,6 +2,7 @@ package org.quick.component
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 /**
  * Created by chris zou on 2016/7/29.
@@ -14,7 +15,7 @@ import android.content.SharedPreferences
  */
 object QuickSPHelper {
 
-    val mSharedPreferences: SharedPreferences by lazy { return@lazy QuickAndroid.applicationContext.getSharedPreferences(QuickAndroid.appBaseName, Context.MODE_PRIVATE) }
+    private val mSharedPreferences: SharedPreferences by lazy { return@lazy QuickAndroid.applicationContext.getSharedPreferences(QuickAndroid.appBaseName, Context.MODE_PRIVATE) }
     val mEditor: SharedPreferences.Editor = mSharedPreferences.edit()
 
     fun putValue(key: String, value: String): QuickSPHelper {
@@ -55,7 +56,7 @@ object QuickSPHelper {
     fun <T> getValue(key: String, defaultValue: T): T = try {
         if (all[key] == null) defaultValue else all[key] as T
     } catch (O_o: Exception) {
-        Log2.e(QuickSPHelper::class.java.simpleName, "Cannot convert with defaultValue type")
+        Log.e(QuickSPHelper::class.java.simpleName, "Cannot convert with defaultValue type")
         defaultValue
     }
 

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import org.quick.component.*
 import android.content.pm.PackageManager
+import android.os.Handler
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import org.quick.component.callback.OnClickListener2
@@ -21,11 +22,11 @@ import org.quick.component.sample.callback.TestBean2
 import org.quick.component.sample.callback.TestBean
 import org.quick.component.utils.*
 import java.io.File
-import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
 
+    val handler=Handler()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,11 +104,11 @@ class MainActivity : AppCompatActivity() {
                         QuickBroadcast.sendBroadcast(intent, "testAction")
                     }
                     R.id.sampleTv6 -> {//快速适配器
-                        QuickActivity.Builder(this@MainActivity, RvListActivity::class.java)
-                                .addParams("TITLE", "这是标题")
-                                .startActivity { resultCode, data ->
-
-                                }
+//                        QuickActivity.Builder(this@MainActivity, RvListActivity::class.java)
+//                                .addParams("TITLE", "这是标题")
+//                                .startActivity { resultCode, data ->
+//
+//                                }
 
                         val intent = Intent()
                         intent.putExtra("TITLE", "这是标题")
@@ -262,10 +263,29 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 })
                     }
+                    R.id.sampleTv16 ->{
+                        QuickAsync.async(object:QuickAsync.OnASyncListener<Int>{
+                            override fun onASync(): Int {
+                                Log2.e("onASync:"+if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程")
+                                handler.post{
+                                    Log2.e("Handler:"+if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程")
+                                }
+                                return 0
+                            }
+
+                            override fun onError(O_O: Exception) {
+                                O_O.printStackTrace()
+                            }
+                            override fun onAccept(value: Int) {
+                                Log2.e("onAccept:"+if (Looper.getMainLooper() == Looper.myLooper()) "主线程" else "子线程")
+                            }
+
+                        })
+                    }
                 }
             }
         }
-        for (index in 0..15) {
+        for (index in 0..16) {
             val id = ViewUtils.getViewId("sampleTv", index.toString())
             findViewById<View>(id).setOnClickListener(onClickListener2)
             findViewById<View>(id).setBackgroundResource(ViewUtils.getSystemAttrTypeValue(this, R.attr.selectableItemBackground).resourceId)

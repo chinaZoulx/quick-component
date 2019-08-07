@@ -1,25 +1,24 @@
-package org.quick.component
+package org.quick.viewHolder
 
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.annotation.IdRes
-import android.support.annotation.NonNull
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.util.SparseArray
 import android.view.View
 import android.widget.*
-import org.quick.component.callback.OnClickListener2
-import org.quick.component.utils.ImageUtils
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.NonNull
 
-open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
-
+/**
+ * 视图持有器
+ */
+open class QuickVH(var itemView:View):QuickVHService {
     private val mViews: SparseArray<View> by lazy { return@lazy SparseArray<View>() }
 
-    fun <T : View> getView(@IdRes id: Int): T? {
+   override fun <T : View> getView(@IdRes id: Int): T? {
 
         var view: View? = mViews.get(id)
         if (view == null) {
@@ -29,13 +28,13 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         return view as T?
     }
 
-    fun setText(@IdRes id: Int, content: CharSequence?, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override fun setText(@IdRes id: Int, content: CharSequence?, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)? ): QuickVHService {
         val textView = getView<TextView>(id)
         textView?.text = content
         if (onClickListener != null) {
             textView?.setOnClickListener (object : OnClickListener2() {
                 override fun onClick2(view: View) {
-                    onClickListener.invoke(view, this@QuickViewHolder)
+                    onClickListener.invoke(view, this@QuickVH)
                 }
             })
         }
@@ -49,7 +48,7 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * @param iconId
      * @return
      */
-    fun setImg(@IdRes id: Int, @DrawableRes iconId: Int, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override fun setImg(@IdRes id: Int, @DrawableRes iconId: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)? ): QuickVHService {
         return setImg(id, false, 0f, "", iconId, onClickListener)
     }
 
@@ -60,7 +59,7 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * @param url
      * @return
      */
-    fun setImg(@IdRes id: Int, url: CharSequence, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override fun setImg(@IdRes id: Int, url: CharSequence, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService {
         return setImg(id, false, 0f, url, 0, onClickListener)
     }
 
@@ -73,7 +72,7 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * @param iconId
      * @return
      */
-    fun setImgRoundRect(@IdRes id: Int, radius: Float, @DrawableRes iconId: Int, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override fun setImgRoundRect(@IdRes id: Int, radius: Float, @DrawableRes iconId: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService {
         return setImg(id, false, radius, "", iconId, onClickListener)
     }
 
@@ -85,7 +84,7 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * @param url
      * @return
      */
-    fun setImgRoundRect(@IdRes id: Int, radius: Float, url: CharSequence, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override fun setImgRoundRect(@IdRes id: Int, radius: Float, url: CharSequence, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService {
         return setImg(id, false, radius, url, 0, onClickListener)
     }
 
@@ -98,7 +97,7 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * @param onClickListener
      * @return
      */
-    fun setImgCircle(@IdRes id: Int, url: CharSequence, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override fun setImgCircle(@IdRes id: Int, url: CharSequence, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)? ): QuickVHService {
         return setImg(id, true, 0f, url, 0, onClickListener)
     }
 
@@ -106,7 +105,7 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * 圆形-本地图片
      *
      */
-    fun setImgCircle(@IdRes id: Int, @DrawableRes imgRes: Int, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)? = null): QuickViewHolder {
+    override  fun setImgCircle(@IdRes id: Int, @DrawableRes imgRes: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService {
         return setImg(id, true, 0f, "", imgRes, onClickListener)
     }
 
@@ -120,13 +119,13 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
      * @return
      */
     @Synchronized
-    private fun setImg(id: Int, isCir: Boolean, radius: Float, url: CharSequence, @DrawableRes imgRes: Int, onClickListener: ((view: View, viewHolder: QuickViewHolder) -> Unit)?): QuickViewHolder {
+    private fun setImg(id: Int, isCir: Boolean, radius: Float, url: CharSequence, @DrawableRes imgRes: Int, onClickListener: ((view: View, VHService: QuickVHService) -> Unit)?): QuickVHService {
 
         val img = getView<ImageView>(id)
         if (TextUtils.isEmpty(url)) {
             when {
-                isCir -> img?.setImageBitmap(ImageUtils.cropCircle(ImageUtils.decodeSampledBitmapFromResource(itemView.context.resources, imgRes, img.measuredWidth, img.measuredHeight)))
-                radius > 0 -> img?.setImageBitmap(ImageUtils.cropRoundRect(ImageUtils.decodeSampledBitmapFromResource(itemView.context.resources, imgRes, img.measuredWidth, img.measuredHeight), radius))
+                isCir -> img?.setImageBitmap(Utils.cropCircle(Utils.decodeSampledBitmapFromResource(itemView.context.resources, imgRes, img.measuredWidth, img.measuredHeight)))
+                radius > 0 -> img?.setImageBitmap(Utils.cropRoundRect(Utils.decodeSampledBitmapFromResource(itemView.context.resources, imgRes, img.measuredWidth, img.measuredHeight), radius))
                 else -> img?.setImageResource(imgRes)
             }
         } else {
@@ -138,98 +137,98 @@ open class QuickViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         }
         if (onClickListener != null) img?.setOnClickListener (object : OnClickListener2() {
             override fun onClick2(view: View) {
-                onClickListener.invoke(view, this@QuickViewHolder)
+                onClickListener.invoke(view, this@QuickVH)
             }
         })
         return this
     }
 
-    open fun bindImgCircle(context: Context, url: String, imageView: ImageView?): QuickViewHolder {
+    override fun bindImgCircle(context: Context, url: String, imageView: ImageView?): QuickVHService {
         return this
     }
 
-    open fun bindImg(context: Context, url: String, imageView: ImageView?): QuickViewHolder {
+    override fun bindImg(context: Context, url: String, imageView: ImageView?): QuickVHService {
         return this
     }
 
-    open fun bindImgRoundRect(context: Context, url: String, radius: Float, imageView: ImageView?): QuickViewHolder {
+    override fun bindImgRoundRect(context: Context, url: String, radius: Float, imageView: ImageView?): QuickVHService {
         return this
     }
 
-    fun setOnClickListener(onClickListener: (view: View, viewHolder: QuickViewHolder) -> Unit, @IdRes vararg ids: Int): QuickViewHolder {
+    override fun setOnClickListener(onClickListener: (view: View, VHService: QuickVHService) -> Unit, @IdRes vararg ids: Int): QuickVHService {
         for (id in ids) setOnClickListener(onClickListener, id)
         return this
     }
 
-    fun setOnClickListener(onClickListener: (view: View, viewHolder: QuickViewHolder) -> Unit, @IdRes id: Int): QuickViewHolder {
+    override fun setOnClickListener(onClickListener: (view: View, VHService: QuickVHService) -> Unit, @IdRes id: Int): QuickVHService {
         getView<View>(id)?.setOnClickListener(object : OnClickListener2() {
             override fun onClick2(view: View) {
-                onClickListener.invoke(view, this@QuickViewHolder)
+                onClickListener.invoke(view, this@QuickVH)
             }
         })
         return this
     }
 
-    fun setProgress(@IdRes id: Int, value: Int): QuickViewHolder {
+    override fun setProgress(@IdRes id: Int, value: Int): QuickVHService {
         getView<ProgressBar>(id)?.progress = value
         return this
     }
 
-    fun setCheck(@IdRes id: Int, isChecked: Boolean): QuickViewHolder {
+    override fun setCheck(@IdRes id: Int, isChecked: Boolean): QuickVHService {
         getView<CompoundButton>(id)?.isChecked = isChecked
         return this
     }
 
-    fun setBackgroundResource(@IdRes id: Int, bgResId: Int): QuickViewHolder {
+    override fun setBackgroundResource(@IdRes id: Int, bgResId: Int): QuickVHService {
         getView<View>(id)?.setBackgroundResource(bgResId)
         return this
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    fun setBackground(@IdRes id: Int, background: Drawable): QuickViewHolder {
+    override  fun setBackground(@IdRes id: Int, background: Drawable): QuickVHService {
         getView<View>(id)?.background = background
         return this
     }
 
-    fun setBackgroundColor(@IdRes id: Int, background: Int): QuickViewHolder {
+    override fun setBackgroundColor(@IdRes id: Int, background: Int): QuickVHService {
         getView<View>(id)?.setBackgroundColor(background)
         return this
     }
 
-    fun setVisibility(visibility: Int, @NonNull @IdRes vararg resIds: Int): QuickViewHolder {
+    override fun setVisibility(visibility: Int, @NonNull @IdRes vararg resIds: Int): QuickVHService {
         for (resId in resIds) getView<View>(resId)?.visibility = visibility
         return this
     }
 
-    fun getTextView(@IdRes id: Int): TextView? {
+    override fun getTextView(@IdRes id: Int): TextView? {
         return getView(id)
     }
 
-    fun getButton(@IdRes id: Int): Button? {
+    override fun getButton(@IdRes id: Int): Button? {
         return getView(id)
     }
 
-    fun getImageView(@IdRes id: Int): ImageView? {
+    override  fun getImageView(@IdRes id: Int): ImageView? {
         return getView(id)
     }
 
-    fun getLinearLayout(@IdRes id: Int): LinearLayout? {
+    override fun getLinearLayout(@IdRes id: Int): LinearLayout? {
         return getView(id)
     }
 
-    fun getRelativeLayout(@IdRes id: Int): RelativeLayout? {
+    override fun getRelativeLayout(@IdRes id: Int): RelativeLayout? {
         return getView(id)
     }
 
-    fun getFramLayout(@IdRes id: Int): FrameLayout? {
+    override fun getFramLayout(@IdRes id: Int): FrameLayout? {
         return getView(id)
     }
 
-    fun getCheckBox(@IdRes id: Int): CheckBox? {
+    override  fun getCheckBox(@IdRes id: Int): CheckBox? {
         return getView(id)
     }
 
-    fun getEditText(@IdRes id: Int): EditText? {
+    override fun getEditText(@IdRes id: Int): EditText? {
         return getView(id)
     }
 }
